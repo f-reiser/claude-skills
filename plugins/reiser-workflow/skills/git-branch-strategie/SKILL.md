@@ -175,7 +175,8 @@ das falsch aussieht, ohne dass es auffällt.
 | `git push` | wer pushen darf | Credential-Helper (folgt `GH_TOKEN`) |
 | Commit-Autor | was die Historie sagt | `user.name` / `user.email` |
 
-**Laufende Arbeit** — Commits, Branches, Issues, Pull Requests — unter dem Bot:
+**Laufende Arbeit** — Commits, Branches, Issues, Pull Requests, Tags und Releases —
+unter dem Bot:
 
 ```bash
 export GH_TOKEN=$(gh auth token --user reiser-claude-agent)
@@ -208,6 +209,10 @@ git config --local --add credential.https://github.com.helper "!gh auth git-cred
 
 Bewusst repo-lokal, nicht global — sonst laufen auch die eigenen Pushes des Nutzers über
 `gh` und die Kontowahl wird ihm aus der Hand genommen.
+
+Ein Release ist zwar eine Veröffentlichung, aber keine Verwaltungsarbeit: `push` genügt
+dafür, und ausgelöst wird es ohnehin nur, wenn der Nutzer „Release bauen" sagt
+(`semver-und-releases`). Es läuft deshalb unter dem Bot wie jeder Commit.
 
 **Nicht mit dem Bot:** Repositories anlegen, Branch-Schutzregeln, Collaborators, Label und
 Issue-Typen einrichten. Der Bot hat dafür bewusst keine Rechte (`push`, kein `admin`).

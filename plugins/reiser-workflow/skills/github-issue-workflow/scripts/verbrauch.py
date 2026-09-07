@@ -3,19 +3,15 @@
 """Kassenbuch fuer unbeaufsichtigte Claude-Laeufe.
 
 WARUM ES DIESE DATEI GIBT
-    Das verbleibende Limit eines Claude-Abonnements ist nicht abfragbar.
-    Messbar ist nur, was die Automatik SELBST verbraucht. Dieses Skript
-    schreibt das mit und rechnet es gegen ein Budget, das der Nutzer setzt.
-
-    Es liegt hier und nicht in den einzelnen Projekten, damit die Regel
-    genau einmal existiert. Der Workflow holt sich das Skills-Repository
-    auf einem festen Tag und ruft es von dort auf.
+    Siehe ../references/verbrauch.md - dort steht die Begruendung samt
+    Belegen, hier nur der Aufruf.
 
 AUFRUF
     verbrauch.py bericht
         Liest verbrauch.json und meldet, wie voll die beiden rollenden
         Fenster sind. Das ist die Zahl, gegen die die Schwellen aus
-        SKILL.md geprueft werden.
+        SKILL.md geprueft werden - was bei "kassenbuch=fehlt" gilt,
+        steht ebenfalls dort.
 
     verbrauch.py fortschreiben <execution_file>
         Haengt den Verbrauch des gerade beendeten Laufs an. Muss auch
@@ -141,8 +137,7 @@ def _budget(name, ersatz=0.0):
 
 def bericht_zeilen(d, jetzt):
     if d is None:
-        return ["kassenbuch=fehlt",
-                "Es gilt: EIN Vorgang, und im Bericht erwaehnen."]
+        return ["kassenbuch=fehlt"]
     e = d["eintraege"]
     art = einheit(e, jetzt)
     zeilen = ["kassenbuch=vorhanden", "eintraege=%d" % len(e), "einheit=%s" % art]
@@ -213,8 +208,12 @@ def fortschreiben(logpfad, pfad=DATEI, jetzt=None, vorgaenge=None):
 
 def selbsttest():
     fehler = []
+    gezaehlt = [0]
 
     def pruefe(name, fn):
+        #  Gezaehlt statt festgeschrieben: eine Zahl im Text waere beim
+        #  naechsten neuen Check schon falsch.
+        gezaehlt[0] += 1
         #  fn ist ein Aufruf, keine fertige Bedingung: Eine Pruefung, die
         #  eine Ausnahme wirft, soll als FEHLER gelten und die restlichen
         #  Pruefungen weiterlaufen lassen. Sonst verdeckt der erste
@@ -283,7 +282,8 @@ def selbsttest():
 
     for f in fehler:
         print("FEHLER: %s" % f)
-    print("%d von 14 Pruefungen bestanden." % (14 - len(fehler)))
+    print("%d von %d Pruefungen bestanden."
+          % (gezaehlt[0] - len(fehler), gezaehlt[0]))
     return 1 if fehler else 0
 
 

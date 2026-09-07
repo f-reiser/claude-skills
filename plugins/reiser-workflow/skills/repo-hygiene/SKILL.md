@@ -19,12 +19,11 @@ description: >
 ## Warum es diesen Skill gibt
 
 Ein Repository vergisst nichts. Was einmal committet und gepusht ist, steht in der
-Historie — auch nach einem `git rm` im nächsten Commit. Es sauber zu entfernen heißt, die
-Historie umzuschreiben, und das ist bei einem geteilten Repository teuer bis unmöglich.
-Ein Kennwort, das dort steht, gilt als kompromittiert und muss gewechselt werden.
+Historie — auch nach einem `git rm` im nächsten Commit.
 
 Deshalb ist der Zeitpunkt **vor** dem ersten Commit der einzige billige. Alles hier zielt
-darauf, diesen Moment zu nutzen statt ihn zu verpassen.
+darauf, diesen Moment zu nutzen statt ihn zu verpassen. Ist er verpasst: Abschnitt
+„Es ist schon passiert".
 
 ## Die Grundasymmetrie
 

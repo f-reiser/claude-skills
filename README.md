@@ -46,10 +46,18 @@ dort gebraucht werden, bleiben Konto-Skills — sie haben mit Softwareprojekten
 
 ## Versionierung
 
-Semantic Versioning, siehe `semver-und-releases`. Die Nummer steht in
-`.claude-plugin/marketplace.json` und in `plugins/reiser-workflow/.claude-plugin/plugin.json`
-und wird bei jeder Änderung an den Skills gemeinsam hochgezählt.
+Semantic Versioning und Releases: `semver-und-releases`. Tag-Schema hier:
+`reiser-workflow--v<version>`.
 
-Jedes Release bekommt einen annotierten Tag `reiser-workflow--v<version>`
-(`claude plugin tag` prüft, dass beide Manifeste übereinstimmen). Projekt-Workflows, die
-ein Skript aus diesem Repository ausführen, hängen an diesem Tag — nicht an einem Branch.
+Beim Release sind **drei** Stellen zu ziehen — die ersten beiden erzwingt das
+Plugin-Format, die dritte hängt daran, dass ein fremder Workflow ein Skript von hier
+ausführt:
+
+1. `.claude-plugin/marketplace.json`
+2. `plugins/reiser-workflow/.claude-plugin/plugin.json`
+3. der `ref:` in `plugins/reiser-workflow/skills/github-issue-workflow/references/verbrauch.md`
+   und in jedem Projekt-Workflow, der ihn übernommen hat
+
+`claude plugin tag` prüft 1 und 2 gegeneinander und verweigert das Release, wenn sie
+auseinanderliegen. **Nummer 3 prüft niemand** — wird sie vergessen, führt der Vier-Stunden-Lauf
+still die alte Skriptfassung weiter aus.
