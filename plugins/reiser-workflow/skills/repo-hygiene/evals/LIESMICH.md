@@ -6,11 +6,19 @@ Hygienebezug, sowie eine Anonymisierung, die an `xlsx` gehört).
 
 ## Wie er gefahren wird
 
-Der Optimierer des skill-creator (`scripts/run_loop.py`) braucht die `claude`-CLI. Auf
-diesem Rechner liegt nur die Linux-Fassung für die Cowork-VM, die unter Windows nicht
-läuft. Ersatzverfahren: drei unabhängige Subagenten bekommen die Skill-Liste (mit den
-Beschreibungen, ohne Hinweis darauf, welcher Skill geprüft wird) und alle 20 Anfragen
-und routen jede einzeln. Drei Durchgänge, weil eine einzelne Entscheidung schwankt.
+**Das richtige Werkzeug wäre `claude plugin eval`.** Es kann genau das: Fälle gegen ein
+Plugin fahren, einen Durchgang ohne Plugin als Vergleich danebenstellen und über den
+Grader `tool_used: Skill` messen, ob der Skill überhaupt gefeuert hat. Es ist **Early
+Access** und für dieses Konto nicht freigeschaltet — der Aufruf antwortet
+`plugin eval is currently in early access`.
+
+Solange das so ist, gilt das Ersatzverfahren: drei unabhängige Subagenten bekommen die
+Skill-Liste (mit den Beschreibungen, ohne Hinweis darauf, welcher Skill geprüft wird) und
+alle 20 Anfragen und routen jede einzeln. Drei Durchgänge, weil eine einzelne Entscheidung
+schwankt.
+
+Wird `plugin eval` freigeschaltet, ist dieses Verfahren abzulösen und nicht daneben
+weiterzuführen — `trigger-evals.json` wandert dann in Fälle unter `evals/`.
 
 Wichtig ist, dass die konkurrierenden Skills realistisch mitgegeben werden — sonst
 misst man nur, ob die Beschreibung zum Thema passt, nicht ob sie sich gegen die
