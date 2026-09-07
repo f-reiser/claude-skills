@@ -51,7 +51,9 @@ Priorität ist kein Feld des Issues selbst, sondern ein Feld im zugehörigen Pro
 Lesen braucht den Scope `read:project`; fehlt er oder gibt es kein Project, gilt Medium.
 
 Wie Priorität, Abhängigkeit und Alter die Reihenfolge bestimmen, steht in `SKILL.md`,
-Abschnitt „Welches Issue zuerst".
+Abschnitt „Welches Issue zuerst". Was die Priorität in einem unbeaufsichtigten Lauf
+zusätzlich auslöst — Nachtfenster für `Low`, Budgetschwellen — entscheidet
+`scripts/verbrauch.py`.
 
 Was die Priorität in einem unbeaufsichtigten Lauf zusätzlich auslöst — Nachtfenster für
 `Low`, Budgetschwellen — steht in `SKILL.md`, Abschnitt „Unbeaufsichtigte Durchgänge".

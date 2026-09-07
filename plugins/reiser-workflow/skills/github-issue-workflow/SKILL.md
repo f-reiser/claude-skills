@@ -160,51 +160,31 @@ Ein unbeaufsichtigter Lauf teilt sich das Limit mit dem Nutzer, und er merkt nic
 er es leerräumt. Deshalb wird vor jedem Vorgang gemessen — gegen ein Budget, das **nur
 für die Automatik gilt** und einen Teil des Limits absichtlich unangetastet lässt.
 
-Gemessen wird gegen ein Kassenbuch, das die Automatik über ihren eigenen Verbrauch führt:
+**Vor jedem Vorgang** — auch vor dem zweiten und dritten im selben Durchgang — fragst du:
 
 ```bash
-python <skill>/scripts/verbrauch.py bericht
+python <skill>/scripts/verbrauch.py entscheidung --prioritaet <Urgent|High|Medium|Low>
 ```
 
-Ausgegeben wird, wie voll die beiden rollenden Fenster sind — ein kurzes und ein langes —
-und was ein Vorgang im Schnitt kostet. Warum es dieses Kassenbuch überhaupt gibt, woher
-die Zahlen kommen und wie der Workflow es fortschreibt: `references/verbrauch.md`.
+Antwort ist `entscheidung=ja` oder `entscheidung=nein` samt Grund. **Die Schwellen stehen
+im Skript, nicht hier** — eine Zahl in einer Anweisung wird irgendwann überlesen, eine im
+Code nicht. Bei `nein` nichts anfangen, den Grund in die Rückmeldung übernehmen.
 
-### Die Schwelle hängt an der Priorität
-
-Verbraucht das Kassenbuch im **langen** Fenster bereits so viel Prozent des Budgets, wird
-zurückgestellt:
-
-| Priorität | zurückstellen ab |
-|---|---|
-| Low | 50 % |
-| Medium | 60 % |
-| High | 70 % |
-| Urgent | 80 % |
-
-Dazu unabhängig: **kurzes Fenster über 50 %** → nichts anfangen. Das ist die Grenze, die
-den Nutzer schützt, der gerade selbst arbeiten will.
-
-**Low nur nachts**, zwischen 0:00 und 4:00 Europe/Berlin.
+`verbrauch.py bericht` zeigt die Zahlen dahinter, für die Job-Zusammenfassung. Warum es
+das Kassenbuch gibt und wie der Workflow es fortschreibt: `references/verbrauch.md`.
 
 ### Wie viele Vorgänge in einen Durchgang passen
 
-Keine feste Zahl. Nach jedem fertigen Vorgang neu entscheiden:
+Keine feste Zahl — so viele, wie `entscheidung` erlaubt. Zwei Dinge kommen dazu, die das
+Skript **nicht** wissen kann:
 
-> Verbrauch im Fenster **plus** durchschnittlicher Verbrauch eines Vorgangs (aus dem
-> Kassenbuch) — bleibt das unter der Schwelle dieser Priorität? Dann den nächsten.
-
-**Der Haken, den du kennen musst:** Was der laufende Durchgang selbst gerade verbraucht,
-ist von innen nicht lesbar — die Zahl entsteht erst, wenn er endet. Der Schnitt aus dem
-Kassenbuch ist deshalb eine Schätzung, und sie ist zu niedrig, sobald ein Vorgang
-ungewöhnlich teuer wird. Also:
-
-- **Rechne den geschätzten Vorgang voll an**, auch wenn er billig aussieht.
 - **Nach einem Vorgang, der aus dem Ruder lief** (viele Fehlversuche, rote Tests, lange
-  Suche): Durchgang beenden, unabhängig vom Rechenergebnis. Der Schnitt trägt diesen Fall
-  nicht.
-- **Meldet der Bericht `kassenbuch=fehlt`** — erster Lauf, Artefakt weg, Datei unlesbar —
-  gilt: **ein Vorgang**, und sag im Bericht, dass ohne Kassenbuch gearbeitet wurde.
+  Suche): Durchgang beenden, auch wenn `entscheidung=ja` sagt. Das Skript schätzt aus dem
+  Schnitt der letzten Läufe; einen entgleisten Vorgang trägt dieser Schnitt nicht. Was
+  der laufende Durchgang gerade verbraucht, ist von innen nicht lesbar — die Zahl
+  entsteht erst, wenn er endet.
+- **Ohne Kassenbuch** antwortet `entscheidung` mit `ja` für **einen** Vorgang. Danach ist
+  Schluss, und sag in der Rückmeldung, dass ohne Kassenbuch gearbeitet wurde.
 
 Am Ende des Durchgangs die Zahl der abgearbeiteten Vorgänge nach `vorgaenge.txt`
 schreiben; daraus entsteht der Schnitt für das nächste Mal.
