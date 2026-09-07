@@ -3,11 +3,11 @@ name: git-branch-strategie
 description: >
   Verbindlicher Feature-Branch-Workflow für alle Softwareprojekte: von main abzweigen und
   nach main zurück, Aktualisieren ausnahmslos per Rebase, Sonderfall blockierter Issues,
-  hierarchische Parent-Branches, Aufräumen der Historie vor dem Pull Request, Squash gegen
-  Merge-Commit, eigenständiges Lösen von Merge-Konflikten — und mit welchem GitHub-Konto
-  gearbeitet wird. Nutze diesen Skill, bevor du einen Branch anlegst, committest, pushst,
-  einen Pull Request erstellst oder mergst; wenn zu klären ist, ob rebased, gesquasht oder
-  gemergt wird; wenn ein Branch länger offen ist; bei jedem Merge-Konflikt; und immer, wenn
+  ein gemeinsamer Branch für hierarchische Issues, Aufräumen der Historie vor dem Pull
+  Request, Rebase-Merge gegen Merge-Commit, eigenständiges Lösen von Merge-Konflikten — und
+  mit welchem GitHub-Konto gearbeitet wird. Nutze diesen Skill, bevor du einen Branch
+  anlegst, committest, pushst, einen Pull Request erstellst oder mergst; wenn zu klären ist,
+  wie ein Pull Request nach main kommt; wenn ein Branch länger offen ist; bei jedem Merge-Konflikt; und immer, wenn
   zwei Änderungen voneinander abhängen. Ebenso bei Fragen nach Branch-Namen,
   Merge-Reihenfolge, Commit-Identität oder dem zu verwendenden GitHub-Konto.
 ---
@@ -68,7 +68,7 @@ nicht nebenbei formatieren.
 
 | GitHub | Bedeutung | Wirkung auf die Reihenfolge |
 |---|---|---|
-| **Add parent** / Sub-Issues | echte Hierarchie: großes Feature, zerlegt in Teile | Parent-Branch ist für die Children der Quellbranch |
+| **Add parent** / Sub-Issues | echte Hierarchie: großes Feature, zerlegt in Teile | alle arbeiten auf **einem** Branch, dem des Parent-Issues |
 | **Mark as blocked by / blocking** | eigenständige Features, die aber in einer Reihenfolge müssen | blockierendes Issue zuerst |
 | **Add relates to** | thematisch verwandt, z. B. Doku-Task zu einem Feature | **keine** — für die Reihenfolge ignorieren |
 
@@ -116,22 +116,18 @@ Features gleichzeitig einbringt, macht jeden Treffer von `git bisect` mehrdeutig
 
 ## Große Features mit Sub-Issues
 
-Das Parent-Issue bekommt einen eigenen Branch. Für die Children ist **dieser** Branch der
-Quellbranch: sie zweigen von ihm ab, rebasen auf ihn und mergen in ihn zurück. Der
-Parent-Branch wird seinerseits per Rebase auf `main` aktuell gehalten.
+**Ein Branch für das Parent-Issue, und alle Child-Issues arbeiten darauf.** Keine
+Branches je Child. Aktuell gehalten wird er per Rebase auf `main`, wie jeder andere
+Feature-Branch; nach `main` zurück geht er als ein Pull Request.
 
-**Achtung, hier greifen zwei Regeln ineinander:** Wird der Parent-Branch rebased, ändern
-sich die Commits, auf denen die Children sitzen. Sie müssen danach **in derselben Sitzung**
-nachgezogen werden:
+Der Grund ist die Verträglichkeit mit der Rebase-Regel: Zweigten Children vom
+Parent-Branch ab, würde jedes Rebase des Parents ihnen die Basis unter den Füßen
+wegziehen — sie müssten in derselben Sitzung nachgezogen werden, und wer das einmal
+vergisst, hinterlässt Branches, die auf Commits sitzen, die es nicht mehr gibt. Ein
+gemeinsamer Branch kennt dieses Problem nicht.
 
-```bash
-git checkout <parent> && git rebase origin/main && git push --force-with-lease
-git checkout <child>  && git rebase <parent>    && git push --force-with-lease   # je Child
-```
-
-Deshalb den Parent-Branch nur rebasen, wenn du die offenen Children kennst und
-anschließend mitziehst. Lass es, solange jemand anderes auf einem Child arbeitet — dann
-erst absprechen.
+Die Commits bleiben trotzdem je Child unterscheidbar: jeder trägt `Refs #<nr>` seines
+eigenen Issues. Beim Merge-Commit (unten) bleibt diese innere Struktur sichtbar.
 
 ## Historie aufräumen vor dem Pull Request
 
@@ -149,12 +145,21 @@ git push --force-with-lease
 
 | Fall | Modus |
 |---|---|
-| kleineres Feature, Bugfix | **Squash and merge** |
+| kleineres Feature, Bugfix | **Rebase and merge** |
 | großes Feature (hierarchisch über mehrere Issues strukturiert) | **Create a merge commit** |
-| immer | **kein Rebase-Merge** |
+| immer | **kein Squash-Merge** |
 
-Beim großen Feature bleibt die innere Struktur sichtbar — genau die Information, die man
-beim Eingrenzen braucht. Beim kleinen Fix wäre sie Rauschen.
+**Warum nicht squashen.** Die Commits sind vor dem Pull Request ohnehin per Rebase
+aufgeräumt (siehe oben) — sie sind also genau die, die man behalten will. Squashen wirft
+diese Arbeit wieder weg. Und bei einer Änderung, die in einen oder zwei Commits passt,
+erzeugt es eine Nebenlinie mit einem einzigen Commit darin: Aufwand ohne Ertrag.
+
+Rebase-Merge setzt die aufgeräumten Commits linear auf `main` — keine Nebenlinie, keine
+Merge-Commits für Kleinkram, und `git log` liest sich als eine Reihe.
+
+Beim großen Feature ist der Merge-Commit richtig: Er hält die Zusammengehörigkeit der
+Teile fest und markiert, wo das Feature beginnt und endet — genau die Information, die man
+beim Eingrenzen mit `git bisect` braucht.
 
 **Gemergt wird vom Nutzer.** Nur wenn er es hier im Gespräch ausspricht, und dann für
 genau diesen einen Pull Request — nicht für den nächsten, nicht als Dauerregel.
