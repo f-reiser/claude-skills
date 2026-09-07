@@ -58,7 +58,7 @@ GitHub kennt drei verschiedene Beziehungen, die nicht dasselbe bedeuten:
 
 | Beziehung | heißt | Reihenfolge |
 |---|---|---|
-| **Add parent** / Sub-Issues | echte Hierarchie: großes Feature, in Teile zerlegt | Parent-Branch ist Quellbranch der Children |
+| **Add parent** / Sub-Issues | echte Hierarchie: großes Feature, in Teile zerlegt | alle Children arbeiten auf **einem** Branch, dem des Parent-Issues |
 | **blocked by / blocking** | eigenständige Issues in fester Reihenfolge | Blockierendes zuerst |
 | **relates to** | thematisch verwandt, etwa Doku zu einem Feature | **ignorieren** |
 
