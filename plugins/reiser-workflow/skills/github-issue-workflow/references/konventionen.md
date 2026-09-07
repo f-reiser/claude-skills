@@ -57,8 +57,8 @@ Höhere Priorität wird bevorzugt, aber **Abhängigkeiten schlagen Priorität**:
 dringendes Issue, das auf einem anderen aufbaut, wartet trotzdem. Bei gleicher Priorität
 entscheidet das Alter (älter zuerst).
 
-`Low` wird im Vier-Stunden-Lauf nicht jedes Mal berücksichtigt, sondern **nur nachts
-zwischen 0:00 und 4:00** und nur bei ausreichendem Limit.
-
 Priorität ist kein Feld des Issues selbst, sondern ein Feld im zugehörigen Project. Das
 Lesen braucht den Scope `read:project`; fehlt er oder gibt es kein Project, gilt Medium.
+
+Was die Priorität in einem unbeaufsichtigten Lauf zusätzlich auslöst — Nachtfenster für
+`Low`, Budgetschwellen — steht in `SKILL.md`, Abschnitt „Unbeaufsichtigte Durchgänge".
