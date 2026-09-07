@@ -28,8 +28,8 @@ Eintrag mit `type == "result"` trägt den Verbrauch:
            "cache_creation_input_tokens": 62000, "cache_read_input_tokens": 1840000}}
 ```
 
-Der Log ist je nach Fassung ein JSON-Array oder eine Zeile-pro-Ereignis-Datei. Deshalb
-beides bedienen und **von hinten** nach dem `result`-Eintrag suchen.
+Der Log ist je nach Fassung ein JSON-Array oder eine Zeile-pro-Ereignis-Datei — das steht
+in keiner Dokumentation, es ist beobachtet. `verbrauch.py` bedient beides.
 
 ## Rollende Fenster statt echter Zurücksetzungen
 
@@ -51,8 +51,8 @@ Token-Summe würde die Läufe deshalb um Größenordnungen falsch bewerten.
 
 Ist das Feld `0` (kommt vor, wenn über ein Abonnement statt über einen API-Schlüssel
 abgerechnet wird), gilt ersatzweise `output_tokens + input_tokens +
-cache_creation_input_tokens` — Cache-Lesen bleibt außen vor, sonst dominiert es die Summe.
-Welche Ersatzgröße gilt, gehört in den Eintrag, sonst summiert man später Äpfel und Birnen.
+cache_creation_input_tokens`. Welche Größe ein Eintrag trägt, steht im Eintrag — sonst
+summiert man später Äpfel und Birnen.
 
 **Die ersten Wochen sind Kalibrierung.** Das Budget ist eine gesetzte Zahl, kein
 gemessener Anteil am echten Limit. Der Nutzer vergleicht, was das Kassenbuch für eine
@@ -70,8 +70,6 @@ hoch — ein Download, ein Upload, unabhängig davon, wie viele Läufe im Fenste
 vorherigen. Deshalb über `gh`:
 
 ```yaml
-      # Das Skript liegt in diesem Skill, nicht im Projekt - eine Fassung fuer
-      # alle Projekte. Fester Tag, damit kein fremder Push den Lauf aendert.
       - uses: actions/checkout@v6
         with:
           repository: f-reiser/claude-skills
@@ -111,9 +109,10 @@ vorherigen. Deshalb über `gh`:
 Schritt fehl, beginnt das Kassenbuch neu, und es gilt die Regel für „kein Kassenbuch"
 aus `SKILL.md`.
 
-Der Tag in `ref:` wird bei jedem Release des Plugins nachgezogen
-(`semver-und-releases`). Ein beweglicher Branch stünde hier falsch: der Workflow führt
-das Skript aus, und was ausgeführt wird, gehört festgenagelt.
+**Ein beweglicher Branch stünde hier falsch:** Der Workflow führt das Skript aus, und was
+ausgeführt wird, gehört festgenagelt — sonst ändert ein fremder Push, was auf dem Runner
+läuft. Der Preis dafür ist, dass der Tag bei jedem Release nachgezogen werden muss; er
+steht deshalb auf der Release-Liste im README.
 
 ## Format
 
@@ -133,17 +132,14 @@ einer hineinpasst. Claude schreibt sie am Ende des Laufs in `vorgaenge.txt`; feh
 Datei, gilt 1.
 
 `gemessen: false` heißt: der Lauf ist eingetragen, aber sein Verbrauch stand nicht im Log
-(abgestürzt, abgebrochen, Datei leer). Der Eintrag bleibt trotzdem stehen — ihn
-wegzulassen hieße, gescheiterte Läufe als kostenlos zu verbuchen, und gerade die sind oft
-die teuren.
+— abgestürzt, abgebrochen, Datei leer.
 
 ## Selbsttest
 
 ```bash
-python scripts/verbrauch.py --selbsttest      # 14 Pruefungen
-python scripts/verbrauch_mutation.py          # 14 Mutationen, je eine pro Pruefung
+python scripts/verbrauch.py --selbsttest
+python scripts/verbrauch_mutation.py
 ```
 
-Der Mutationstest ist der wichtigere von beiden: Er baut definierte Fehler ein und
-verlangt, dass **genau** die zuständige Prüfung rot wird. Ohne ihn wüsste niemand, ob der
-Selbsttest je etwas gefunden hätte.
+Beide melden Anzahl und Ergebnis selbst. Wozu der Mutationstest da ist:
+`test-driven-development`.

@@ -64,12 +64,12 @@ werden. Also die Originaldatei, den Issue-Text, die Nachricht des Nutzers.
 **2. Eigene Begründungen weglassen.** Kein „das ist so, weil …". Der fremde Agent soll das
 Verhalten aus dem Code ableiten und selbst beurteilen, ob es zur Anforderung passt.
 
-**3. Nur MELDEN lassen, nichts ändern.** Ein Agent, der repariert, verschiebt den blinden
+**3. Nur melden lassen, nichts ändern.** Ein Agent, der repariert, verschiebt den blinden
 Fleck bloß um eine Instanz weiter. Das Ergebnis ist ein Befund, über den ein Mensch
 entscheidet.
 
-**4. Sicherheitsgrad verlangen: sicher / vermutlich / unklar.** Ohne das kommen zwanzig
-gleich laute Befunde zurück, und das Sortieren kostet mehr als die Prüfung gespart hat.
+**4. Sicherheitsgrad verlangen.** Ohne ihn kommen zwanzig gleich laute Befunde zurück,
+und das Sortieren kostet mehr als die Prüfung gespart hat.
 
 **5. Jeden Befund selbst nachprüfen, bevor du ihn weitergibst.** Beim ersten Einsatz waren
 fünf von neun echt. Ungeprüft weitergereichte Befunde sind Rauschen — und sie beschädigen
@@ -120,8 +120,10 @@ einer Datei durchsuchte, aber nicht den kompilierten Anteil; dort standen die Da
 
 ## Wohin mit dem Ergebnis
 
-Jeder **bestätigte** Befund wird ein Issue (`github-issue-workflow`), kein stiller Fix im
-laufenden Branch — sonst weiß hinterher niemand, dass die Gegenlese etwas gefunden hat.
+Jeder **bestätigte** Befund wird ein Issue mit dem Label `Gegenlese`
+(`github-issue-workflow`), kein stiller Fix im laufenden Branch — sonst weiß hinterher
+niemand, dass die Gegenlese etwas gefunden hat. Ein Befund über eine Prüfung, die
+strukturell nicht anschlagen kann, trägt zusätzlich `Pruefluecke`.
 
 Jeder **nicht bestätigte** Befund wird mit einer Zeile Begründung verworfen, aber sichtbar:
 als Notiz im Pull Request oder im Issue. Still verworfene Befunde kommen bei der nächsten
@@ -130,6 +132,4 @@ Gegenlese wieder, und dann prüfst du sie ein zweites Mal.
 ## Nicht dasselbe wie ein Code-Review
 
 Ein Review fragt: *Ist der Code gut geschrieben?* Die Gegenlese fragt: *Ist er die
-richtige Auslegung der Anforderung?* Deshalb bekommt der fremde Agent die Anforderung und
-gerade **nicht** die Begründung — sonst prüft er nur noch die innere Stimmigkeit dessen,
-was man ihm erzählt hat.
+richtige Auslegung der Anforderung?* Daher Regel 2.

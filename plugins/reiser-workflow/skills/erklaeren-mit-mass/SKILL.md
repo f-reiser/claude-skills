@@ -66,8 +66,6 @@ die gehört, wenn überhaupt, in die Commit-Meldung.
 | Issue | die Sache selbst, die Entscheidung, der Stand |
 | Doku im Repo | was länger gilt als ein Commit |
 
-Dieselbe Begründung an zwei dieser Stellen ist einmal zu viel.
-
 ## Wenn es länger sein darf
 
 Kürze ist kein Selbstzweck. Länger darf werden, was Schaden verhindert: ein Fallstrick,

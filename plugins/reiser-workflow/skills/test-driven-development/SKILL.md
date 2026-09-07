@@ -55,10 +55,7 @@ wird repariert.
 ## Der gefährlichste Fall: der Test mit demselben blinden Fleck
 
 Entstehen Test und Code aus derselben Annahme, ist der Test grün und der Code falsch.
-
-Aus der Praxis: eine Aufräumroutine suchte ab „letzte Zeile mit Inhalt" nach oben — und
-der Test, der prüfen sollte, ob unten leere Zeilen stehen, tat genau dasselbe. 35 leere
-Zeilen, Test grün.
+Wie oft das schon passiert ist und woran man es erkennt: `fremde-gegenlese`.
 
 **Gegenmittel im eigenen Kopf:** den Test aus einer ANDEREN Richtung bauen als den Code.
 Andere API, andere Datenquelle, andere Blickrichtung. Rechnet der Code vorwärts, prüft

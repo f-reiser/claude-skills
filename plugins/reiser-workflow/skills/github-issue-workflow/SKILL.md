@@ -38,12 +38,9 @@ gh repo view --json nameWithOwner --jq .nameWithOwner
 
 ## Auch Pull Requests tragen Label
 
-Ein Pull Request mit `Einarbeiten` wird **genauso behandelt wie ein Issue**: Kommentare
-lesen, umsetzen, dokumentieren, Label entfernen. Der Nutzer nutzt das, um Anmerkungen zu
-einem laufenden Pull Request loszuwerden, ohne ein neues Issue aufzumachen.
-
-Umgekehrt darfst du an Pull Requests dieselben Label setzen wie an Issues, nach denselben
-Regeln (`references/konventionen.md`) — etwa `Rückfrage`, wenn eine Anmerkung unklar ist.
+Der Nutzer nutzt das, um Anmerkungen zu einem laufenden Pull Request loszuwerden, ohne
+ein neues Issue aufzumachen. Dass Label für beides gelten, steht in
+`references/konventionen.md`.
 
 Gearbeitet wird dann auf dem **bestehenden** Branch des Pull Requests, nicht auf einem
 neuen. Vorher nach `git-branch-strategie` auf den Quellbranch rebasen.
@@ -53,23 +50,18 @@ neuen. Vorher nach `git-branch-strategie` auf den Quellbranch rebasen.
 In dieser Reihenfolge:
 
 1. **Abhängigkeit schlägt alles.** Zuerst, was von nichts Offenem abhängt.
-2. **Dann Priorität**, absteigend: Urgent, High, Medium, Low.
-3. **Dann Alter**, das am längsten unveränderte zuerst.
+2. **Dann Priorität**, absteigend — die Stufen und ihr Standardwert:
+   `references/konventionen.md`.
+3. **Dann Alter**, gemessen an `updatedAt`: das am längsten unveränderte zuerst. Nicht
+   das Anlagedatum — ein Issue, an dem gerade diskutiert wurde, hat frische Information,
+   und die soll nicht vor dem Vergessenen abgearbeitet werden.
 
-GitHub kennt drei verschiedene Beziehungen, die nicht dasselbe bedeuten:
-
-| Beziehung | heißt | Reihenfolge |
-|---|---|---|
-| **Add parent** / Sub-Issues | echte Hierarchie: großes Feature, in Teile zerlegt | alle Children arbeiten auf **einem** Branch, dem des Parent-Issues |
-| **blocked by / blocking** | eigenständige Issues in fester Reihenfolge | Blockierendes zuerst |
-| **relates to** | thematisch verwandt, etwa Doku zu einem Feature | **ignorieren** |
-
-**Parent heißt Hierarchie, sonst nichts.** Ein Issue, das ein anderes blockiert, ist kein
-Parent — die Begriffe nicht vermischen, weil daran die Branch-Führung hängt.
+Welche Beziehung was bedeutet — Parent, blocked by, relates to — steht in
+`git-branch-strategie`; dort hängt die Branch-Führung daran. Für die Reihenfolge zählt:
+**Blockierendes zuerst, `relates to` gar nicht.**
 
 Ein Issue mit offenen `blockedBy`-Einträgen kommt später, es sei denn, die Ausnahme aus
-`git-branch-strategie` greift (Blocker fertig, Tests grün, Abhängigkeit im Pull Request
-benannt).
+`git-branch-strategie` greift.
 
 Prüfe Abhängigkeiten **zusätzlich selbst**: Der Nutzer kennzeichnet, was er sieht, aber
 nicht jede Beziehung ist ihm bewusst. Zwei Issues, die dieselbe Datei umbauen, hängen
@@ -84,23 +76,13 @@ gh api graphql -f query='{ repository(owner:"OWNER", name:"REPO") {
     parent{number} subIssues(first:20){totalCount} } } } }'
 ```
 
-**Priorität** ist kein Issue-Feld, sondern ein Feld im Project. Ist sie nicht lesbar,
-gilt **Medium** — und sag einmal, dass du sie nicht lesen konntest.
-
-Wie viele Vorgänge ein unbeaufsichtigter Durchgang übernimmt, entscheidet das Budget
-(unten), nicht eine feste Zahl.
+Ist die Priorität nicht lesbar, sag einmal, dass du sie nicht lesen konntest — welcher
+Wert dann gilt, steht in `references/konventionen.md`.
 
 ## Issue-Typ
 
-Jedes Issue trägt einen Typ: **Bug** (Fehlverhalten), **Feature** (neue Anforderung),
-**Task** (alles andere, etwa Dokumentation).
-
-- **Eigene Issues:** Typ immer selbst setzen.
-- **Fremdes Issue ohne Typ, Sache eindeutig:** ebenfalls selbst setzen.
-- **Nicht eindeutig:** melden statt raten — im Chat, sonst als Kommentar im Issue.
-
-Die Meldung ist für die Zweifelsfälle da. Ein offensichtliches Doku-Issue als `Task` zu
-kennzeichnen ist keine Anmaßung, sondern Aufräumen.
+Jedes Issue trägt einen Typ. Welche es gibt und wer ihn setzen darf:
+`references/konventionen.md`.
 
 ## Der Ablauf
 
@@ -119,8 +101,8 @@ kennzeichnen ist keine Anmaßung, sondern Aufräumen.
    Merge und nähme dir Schritt 9 aus der Hand.
 6. **Push** des eigenen Branches, danach Tests und CI abwarten (`gh run watch <id>
    --exit-status`). Nur bei Grün weiter.
-7. **Gegenlesen lassen** nach `fremde-gegenlese`, sobald die Änderung mehr als eine
-   Funktion berührt oder einen Test angefasst hat. Bestätigte Befunde werden Issues.
+7. **Gegenlesen lassen** nach `fremde-gegenlese` — wann sie fällig ist und was mit den
+   Befunden geschieht, steht dort.
 8. **Dokumentieren, dann Pull Request, dann Label:** Kommentar ins Issue (was geändert
    wurde und warum), `gh pr create`, danach `gh issue edit <nr> --remove-label
    Einarbeiten`. Das Label zuletzt — bei einem Abbruch dazwischen wäre das Issue sonst
@@ -139,14 +121,11 @@ Setzt der Nutzer **Untersuche**, heißt das: Fehlverhalten nachstellen.
   eines Fixes. Danach `Untersuche` entfernen und `Entscheidung` oder `Rückfrage` setzen.
 - **Minimal und risikoarm:** darfst du direkt beheben — vorher durch einen Test
   absichern (testgetrieben), Branch-Strategie beachten.
-- **Duplikat:** `Duplicate` setzen, Verweis auf das abdeckende Issue ins Relationship-Feld.
+- **Duplikat:** `Duplicate` nach `references/konventionen.md`.
 
 ## Wenn etwas unklar ist
 
-Rate nicht.
-
-- **Rückfrage** — es geht nur ums Nachschärfen.
-- **Entscheidung** — es stehen zwei oder mehr echte Alternativen zur Wahl.
+Rate nicht. Welches der beiden Label greift, steht in `references/konventionen.md`.
 
 Beide: `Einarbeiten` entfernen, Label setzen, Frage als Kommentar. Eine gute Rückfrage
 nennt, **was du verstanden hast**, **woran es konkret hängt** (Datei und Zeile) und
@@ -181,21 +160,15 @@ Ein unbeaufsichtigter Lauf teilt sich das Limit mit dem Nutzer, und er merkt nic
 er es leerräumt. Deshalb wird vor jedem Vorgang gemessen — gegen ein Budget, das **nur
 für die Automatik gilt** und einen Teil des Limits absichtlich unangetastet lässt.
 
-**Was du dabei nicht kannst: das verbleibende Limit abfragen.** Dafür gibt es keinen
-Endpunkt. Also führt die Automatik ein Kassenbuch über ihren eigenen Verbrauch und misst
-gegen ein vom Nutzer gesetztes Budget:
+Gemessen wird gegen ein Kassenbuch, das die Automatik über ihren eigenen Verbrauch führt:
 
 ```bash
 python <skill>/scripts/verbrauch.py bericht
 ```
 
-Ausgegeben wird, wie voll die Fenster sind und was ein Vorgang im Schnitt kostet. Woher
-die Zahlen kommen und wie der Workflow das Kassenbuch fortschreibt:
-`references/verbrauch.md`.
-
-**Zwei Fenster, beide rollend:** die letzten 5 Stunden und die letzten 7 Tage. Rollend,
-weil unbekannt ist, wann Anthropic zurücksetzt — ein rollendes Fenster ist immer
-mindestens so streng wie das echte.
+Ausgegeben wird, wie voll die beiden rollenden Fenster sind — ein kurzes und ein langes —
+und was ein Vorgang im Schnitt kostet. Warum es dieses Kassenbuch überhaupt gibt, woher
+die Zahlen kommen und wie der Workflow es fortschreibt: `references/verbrauch.md`.
 
 ### Die Schwelle hängt an der Priorität
 
@@ -216,7 +189,7 @@ den Nutzer schützt, der gerade selbst arbeiten will.
 
 ### Wie viele Vorgänge in einen Durchgang passen
 
-Es gibt keine feste Zahl mehr. Nach jedem fertigen Vorgang neu entscheiden:
+Keine feste Zahl. Nach jedem fertigen Vorgang neu entscheiden:
 
 > Verbrauch im Fenster **plus** durchschnittlicher Verbrauch eines Vorgangs (aus dem
 > Kassenbuch) — bleibt das unter der Schwelle dieser Priorität? Dann den nächsten.
@@ -230,8 +203,8 @@ ungewöhnlich teuer wird. Also:
 - **Nach einem Vorgang, der aus dem Ruder lief** (viele Fehlversuche, rote Tests, lange
   Suche): Durchgang beenden, unabhängig vom Rechenergebnis. Der Schnitt trägt diesen Fall
   nicht.
-- **Ohne Kassenbuch** — erster Lauf, Artefakt fehlt, Datei unlesbar — gilt: **ein
-  Vorgang**, und sag im Bericht, dass ohne Kassenbuch gearbeitet wurde.
+- **Meldet der Bericht `kassenbuch=fehlt`** — erster Lauf, Artefakt weg, Datei unlesbar —
+  gilt: **ein Vorgang**, und sag im Bericht, dass ohne Kassenbuch gearbeitet wurde.
 
 Am Ende des Durchgangs die Zahl der abgearbeiteten Vorgänge nach `vorgaenge.txt`
 schreiben; daraus entsteht der Schnitt für das nächste Mal.

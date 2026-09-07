@@ -1,12 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Mutationstest fuer verbrauch.py.
+"""Mutationstest fuer verbrauch.py - siehe Skill test-driven-development.
 
-Jede Pruefung des Selbsttests hat hier eine Mutation, oder sie zaehlt
-nicht: ein Selbsttest, der nie rot war, prueft moeglicherweise nichts.
-Diese Datei baut definierte Fehler ein und verlangt, dass GENAU die
-zustaendige Pruefung anschlaegt - eine Mutation, die eine beliebige
-andere Pruefung rot macht, ist kein Nachweis.
+Verlangt wird, dass GENAU die zustaendige Pruefung anschlaegt: eine
+Mutation, die irgendeine andere Pruefung rot macht, ist kein Nachweis.
 
     python verbrauch_mutation.py
 """
@@ -58,8 +55,7 @@ M = [
      'if isinstance(e.get("t"), (int, float))]',
      "Altes faellt raus"),
     ("fehlendes Kassenbuch verschweigen",
-     '    if d is None:\n        return ["kassenbuch=fehlt",',
-     '    if d is None:\n        return ["kassenbuch=egal",',
+     'return ["kassenbuch=fehlt"]', 'return ["kassenbuch=egal"]',
      "kein Kassenbuch"),
     ("kaputte Zeile wird zum Ergebnis",
      "        try:\n            aus.append(json.loads(z))\n"

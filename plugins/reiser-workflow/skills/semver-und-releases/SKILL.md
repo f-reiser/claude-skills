@@ -40,6 +40,17 @@ nackten Nummer und einem Zeilenumbruch.
 Muss die Nummer an weiteren Stellen auftauchen, wird sie von dort **abgeleitet**, nicht
 abgeschrieben. Eine zweite gepflegte Fassung läuft auseinander — die Frage ist nur, wann.
 
+**Wenn das Format zwei Fassungen erzwingt**, wie bei einem Claude-Plugin
+(`.claude-plugin/marketplace.json` und `plugins/<name>/.claude-plugin/plugin.json`), gilt
+die Ausnahme nur mit einer **Prüfung, die den Gleichlauf erzwingt** — hier
+`claude plugin tag`, das das Release verweigert, wenn beide auseinanderliegen. Ohne
+solche Prüfung ist die zweite Fassung kein Sonderfall, sondern der Fehler.
+
+Führe außerdem im Kopf, **wer die Nummer sonst noch liest**: Ein fremder Workflow, der
+ein Skript dieses Repositories über einen Tag holt, hängt an genau dieser Nummer. Solche
+Stellen gehören auf die Release-Checkliste, sonst führt er nach dem nächsten Release
+weiter die alte Fassung aus.
+
 Nicht zu verwechseln mit projekteigenen Stand-Angaben, die etwas anderes versionieren
 (etwa `ANLEITUNG_STAND` im Stoffverteilungsplan, das nur das Anleitungsblatt betrifft).
 
@@ -59,18 +70,27 @@ Ist eine davon verletzt: nicht bauen, sondern sagen welche.
 ### Ablauf
 
 ```bash
-export GH_TOKEN=$(gh auth token --user reiser-claude-agent)
+# Konto setzen nach git-branch-strategie
 git checkout main && git pull --ff-only
 
 # 1. Version festlegen, Nummer bestaetigen lassen, committen
 
 # 2. Annotierter Tag - nie ein Lightweight-Tag
-git tag -a v0.3.0 -m "Release 0.3.0"
-git push origin v0.3.0
+git tag -a <tag> -m "Release <version>"
+git push origin <tag>
 
 # 3. Release samt Download-Dateien
-gh release create v0.3.0 --title "0.3.0" --notes-file <datei> <asset> ...
+gh release create <tag> --title "<version>" --notes-file <datei> <asset> ...
 ```
+
+**Wie `<tag>` heißt.** Im Normalfall `v<version>`, also `v1.4.0`. Enthält ein Repository
+**mehrere getrennt veröffentlichte Einheiten** — etwa mehrere Plugins in einem
+Marketplace —, trägt der Tag den Namen der Einheit voran: `<name>--v<version>`, also
+`reiser-workflow--v0.3.0`. Sonst kollidieren zwei Einheiten beim ersten Mal, an dem sie
+dieselbe Nummer erreichen.
+
+Welches Schema ein Repository verwendet, ist nichts, was man raten darf: `git tag --list`
+zeigt es, und ein Workflow, der einen Tag als `ref:` festnagelt, zeigt es auch.
 
 **Annotiert (`-a`), nicht leichtgewichtig.** Ein annotierter Tag ist ein eigenes Objekt
 mit Autor, Datum und Meldung und lässt sich signieren; ein leichtgewichtiger Tag ist nur
@@ -89,8 +109,8 @@ Also das gebaute Ergebnis: die fertige Anwendungsdatei, das Archiv, die ausliefe
 Vorlage. Wo das Ergebnis nicht im Repository liegt (weil es erzeugt wird oder binär ist),
 wird es für das Release gebaut und dann angehängt.
 
-Nichts anhängen, was nicht hinaus soll — vor jedem Release prüfen, ob eine Datei
-Zugangsdaten oder personenbezogene Inhalte trägt.
+Ein Release-Asset geht genauso unwiderruflich hinaus wie ein Commit: **vor dem Anhängen
+prüfen nach `repo-hygiene`.**
 
 ### Release Notes
 
