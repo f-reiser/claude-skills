@@ -1,7 +1,8 @@
 # Das Kassenbuch der unbeaufsichtigten Läufe
 
-Wie das Budget technisch zustande kommt. Die **Regel**, wann zurückgestellt wird, steht in
-`SKILL.md`; hier steht nur, woher die Zahlen kommen.
+Wie das Budget technisch zustande kommt. Die **Schwellen** stehen in `scripts/verbrauch.py`
+und werden über `verbrauch.py entscheidung` abgefragt; hier steht nur, woher die Zahlen
+kommen, die dort hineingehen.
 
 ## Warum überhaupt ein eigenes Kassenbuch
 

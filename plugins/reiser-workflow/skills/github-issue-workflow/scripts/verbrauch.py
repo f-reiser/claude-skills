@@ -7,11 +7,15 @@ WARUM ES DIESE DATEI GIBT
     Belegen, hier nur der Aufruf.
 
 AUFRUF
+    verbrauch.py entscheidung --prioritaet High
+        Beantwortet die einzige Frage, die im Lauf zaehlt: noch einen
+        Vorgang anfangen, ja oder nein. Die Schwellen stehen HIER im
+        Code und nirgends sonst - eine Schwelle, die nur als Prosa in
+        einer Anweisung steht, wird irgendwann ueberlesen.
+
     verbrauch.py bericht
-        Liest verbrauch.json und meldet, wie voll die beiden rollenden
-        Fenster sind. Das ist die Zahl, gegen die die Schwellen aus
-        SKILL.md geprueft werden - was bei "kassenbuch=fehlt" gilt,
-        steht ebenfalls dort.
+        Die Zahlen dahinter, fuer den Menschen und fuer die
+        Job-Zusammenfassung.
 
     verbrauch.py fortschreiben <execution_file>
         Haengt den Verbrauch des gerade beendeten Laufs an. Muss auch
@@ -36,6 +40,20 @@ DATEI = "verbrauch.json"
 KURZ_H = 5
 LANG_H = 24 * 7
 AUFHEBEN_H = 24 * 8          # etwas mehr als das lange Fenster
+
+#  Ab welchem Anteil des LANGEN Budgets ein Vorgang dieser Prioritaet
+#  zurueckgestellt wird. Je wichtiger, desto weiter darf er gehen.
+SCHWELLEN = {"low": 0.50, "medium": 0.60, "high": 0.70, "urgent": 0.80}
+STANDARD_PRIORITAET = "medium"
+
+#  Das kurze Fenster gehoert dem Nutzer: Wer sich gerade hinsetzt, soll
+#  nicht feststellen, dass die Automatik ihm das Fenster leergeraeumt hat.
+KURZ_GRENZE = 0.50
+
+#  Low laeuft nur nachts. Ortszeit des Nutzers, nicht UTC - der Runner
+#  steht in UTC und laege im Sommer zwei Stunden daneben.
+LOW_VON, LOW_BIS = 0, 4
+ZEITZONE = "Europe/Berlin"
 
 
 # ---------------------------------------------------------------- lesen
@@ -166,6 +184,72 @@ def bericht_zeilen(d, jetzt):
     return zeilen
 
 
+# ------------------------------------------------------------ entscheiden
+
+def ortsstunde(jetzt):
+    """Stunde in der Zeitzone des Nutzers, oder None.
+
+    None ist ein eigenes Ergebnis, kein Ersatzwert: Ohne Zeitzonendaten
+    (tzdata fehlt, etwa unter Windows) waere jede angenommene Stunde
+    geraten, und geraten wuerde hier bedeuten, nachts zu arbeiten, wenn
+    es Nachmittag ist.
+    """
+    try:
+        from datetime import datetime, timezone
+        from zoneinfo import ZoneInfo
+        return datetime.fromtimestamp(jetzt, timezone.utc).astimezone(
+            ZoneInfo(ZEITZONE)).hour
+    except Exception:
+        return None
+
+
+def entscheidung(d, jetzt, prioritaet, stunde=None):
+    """(ja, grund) - darf jetzt ein Vorgang dieser Prioritaet beginnen?
+
+    Der Schnitt aus dem Kassenbuch wird VOLL angerechnet: Was der
+    laufende Durchgang gerade verbraucht, ist von innen nicht lesbar,
+    also muss der naechste Vorgang geschaetzt werden, bevor er beginnt.
+    """
+    p = (prioritaet or "").strip().lower()
+    if p not in SCHWELLEN:
+        p = STANDARD_PRIORITAET
+
+    if p == "low":
+        h = ortsstunde(jetzt) if stunde is None else stunde
+        if h is None:
+            return False, "Ortszeit nicht bestimmbar, und Low laeuft nur nachts"
+        if not (LOW_VON <= h < LOW_BIS):
+            return False, ("Low laeuft nur zwischen %d:00 und %d:00 %s, es ist %d Uhr"
+                           % (LOW_VON, LOW_BIS, ZEITZONE, h))
+
+    if d is None:
+        #  Der erste Vorgang ist erlaubt - ohne Kassenbuch gibt es nichts
+        #  zu messen, und gar nicht zu arbeiten waere die teurere Antwort.
+        return True, "kein Kassenbuch: dieser eine Vorgang, danach Schluss"
+
+    e = d["eintraege"]
+    art = einheit(e, jetzt)
+    soll_lang = _budget("BUDGET_LANG_%s" % art.upper())
+    soll_kurz = _budget("BUDGET_KURZ_%s" % art.upper())
+    if soll_lang <= 0 or soll_kurz <= 0:
+        return False, "kein Budget in %s gesetzt" % art
+
+    kurz = summe(e, jetzt, KURZ_H)[0 if art == "usd" else 1]
+    if kurz > KURZ_GRENZE * soll_kurz:
+        return False, ("kurzes Fenster bei %.0f%%, Grenze %.0f%%"
+                       % (100.0 * kurz / soll_kurz, 100.0 * KURZ_GRENZE))
+
+    usd, token, vorg = summe(e, jetzt, LANG_H)
+    lang = usd if art == "usd" else token
+    schnitt = (lang / vorg) if vorg > 0 else 0.0
+    anteil = (lang + schnitt) / soll_lang
+    if anteil >= SCHWELLEN[p]:
+        return False, ("langes Fenster kaeme auf %.0f%%, Schwelle fuer %s ist %.0f%%"
+                       % (100.0 * anteil, p, 100.0 * SCHWELLEN[p]))
+    return True, ("langes Fenster kaeme auf %.0f%%, Schwelle fuer %s ist %.0f%%"
+                  % (100.0 * anteil, p, 100.0 * SCHWELLEN[p]))
+
+
 # ------------------------------------------------------------ schreiben
 
 def fortschreiben(logpfad, pfad=DATEI, jetzt=None, vorgaenge=None):
@@ -280,6 +364,61 @@ def selbsttest():
     d2 = fortschreiben(os.devnull, p, jetzt + AUFHEBEN_H * 3600 + 10, 1)
     pruefe("Altes faellt raus", lambda: len(d2["eintraege"]) == 1)
 
+    #  15-24: die Entscheidung. Budget so gesetzt, dass 60 Token schon
+    #  60 % des langen Budgets sind - ein Vorgang kostet im Schnitt 10,
+    #  die Schaetzung hebt also jede Antwort um genau eine Stufe.
+    alt = dict(os.environ)
+    try:
+        os.environ["BUDGET_LANG_TOKEN"] = "100"
+        os.environ["BUDGET_KURZ_TOKEN"] = "100"
+        os.environ.pop("BUDGET_LANG_USD", None)
+        os.environ.pop("BUDGET_KURZ_USD", None)
+
+        def buch(token, vorgaenge=1, alter_h=20):
+            return {"eintraege": [{"t": jetzt - alter_h * 3600, "usd": 0.0,
+                                   "token": token, "vorgaenge": vorgaenge}]}
+
+        #  50 verbraucht + 50/1 geschaetzt = 100 % -> ueber jeder Schwelle
+        pruefe("teuer: Urgent nein",
+               lambda: entscheidung(buch(50), jetzt, "Urgent")[0] is False)
+        #  20 + 20 = 40 % -> unter jeder Schwelle
+        pruefe("guenstig: Low ja",
+               lambda: entscheidung(buch(20), jetzt, "Low", stunde=2)[0] is True)
+        #  30 + 30 = 60 % -> Medium (60) nein, High (70) ja
+        pruefe("Schwelle trennt Medium",
+               lambda: entscheidung(buch(30), jetzt, "Medium")[0] is False)
+        pruefe("Schwelle trennt High",
+               lambda: entscheidung(buch(30), jetzt, "High")[0] is True)
+        pruefe("unbekannte Prioritaet gilt als Medium",
+               lambda: entscheidung(buch(30), jetzt, "Quatsch")[0] is False)
+        pruefe("Low tagsueber nein",
+               lambda: entscheidung(buch(20), jetzt, "Low", stunde=14)[0] is False)
+        #  Zeitzone absichtlich unauffindbar machen, statt die Erwartung
+        #  aus LOW_VON/LOW_BIS zu berechnen: ein Test, der mit denselben
+        #  Konstanten rechnet wie der Code, prueft nur sich selbst.
+        zz = globals()["ZEITZONE"]
+        try:
+            globals()["ZEITZONE"] = "Nirgendwo/Nirgends"
+            pruefe("Low ohne Ortszeit nein",
+                   lambda: entscheidung(buch(20), jetzt, "low")[0] is False)
+        finally:
+            globals()["ZEITZONE"] = zz
+
+        #  Langes Budget hier absichtlich weit, damit wirklich das kurze
+        #  Fenster die Antwort gibt und nicht nebenbei das lange.
+        os.environ["BUDGET_LANG_TOKEN"] = "10000"
+        pruefe("kurzes Fenster schlaegt Prioritaet",
+               lambda: entscheidung(buch(60, 1, 1), jetzt, "Urgent")[0] is False)
+        os.environ["BUDGET_LANG_TOKEN"] = "100"
+        pruefe("ohne Kassenbuch ein Vorgang",
+               lambda: entscheidung(None, jetzt, "Medium")[0] is True)
+        os.environ["BUDGET_LANG_TOKEN"] = "0"
+        pruefe("ohne Budget nein",
+               lambda: entscheidung(buch(1), jetzt, "Urgent")[0] is False)
+    finally:
+        os.environ.clear()
+        os.environ.update(alt)
+
     for f in fehler:
         print("FEHLER: %s" % f)
     print("%d von %d Pruefungen bestanden."
@@ -293,6 +432,15 @@ def main(argv):
     if len(argv) > 1 and argv[1] == "bericht":
         for z in bericht_zeilen(lade(), time.time()):
             print(z)
+        return 0
+    if len(argv) > 1 and argv[1] == "entscheidung":
+        p = argv[argv.index("--prioritaet") + 1] if "--prioritaet" in argv else ""
+        ja, grund = entscheidung(lade(), time.time(), p)
+        print("entscheidung=%s" % ("ja" if ja else "nein"))
+        print("grund=%s" % grund)
+        #  Rueckgabewert bleibt 0: Ein "nein" ist das erwartete Ergebnis
+        #  und kein Fehler - ein Workflow-Schritt duerfte daran nicht
+        #  scheitern.
         return 0
     if len(argv) > 2 and argv[1] == "fortschreiben":
         d = fortschreiben(argv[2])
