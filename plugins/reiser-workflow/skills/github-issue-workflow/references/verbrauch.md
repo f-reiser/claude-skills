@@ -133,7 +133,9 @@ einer hineinpasst. Claude schreibt sie am Ende des Laufs in `vorgaenge.txt`; feh
 Datei, gilt 1.
 
 `gemessen: false` heißt: der Lauf ist eingetragen, aber sein Verbrauch stand nicht im Log
-— abgestürzt, abgebrochen, Datei leer.
+— abgestürzt, abgebrochen, Datei leer. Steht dann `geschaetzt: true`, trägt der Eintrag
+den bisherigen Schnitt je Vorgang statt einer Null; gibt es noch keinen Schnitt, zählt er
+keinen Vorgang mit.
 
 ## Selbsttest
 

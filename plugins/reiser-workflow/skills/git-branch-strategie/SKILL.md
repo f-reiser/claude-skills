@@ -25,6 +25,26 @@ git checkout -b issue-<nr>-<kurzer-slug> origin/main
 
 Nie direkt auf `main` committen.
 
+**Vorher nachsehen, ob es den Branch schon gibt.** Ein früherer Versuch kann abgebrochen
+sein — Nutzungslimit, Zeitüberschreitung, abgestürzter Lauf — und Commits hinterlassen
+haben, während das Issue sein Label behielt:
+
+```bash
+git ls-remote --heads origin "issue-<nr>-*"
+```
+
+Kommt etwas zurück, wird **darauf weitergearbeitet**, nicht neu angefangen:
+
+```bash
+git checkout -b issue-<nr>-<slug> origin/issue-<nr>-<slug>
+git rebase origin/main
+```
+
+Und dann zuerst `git log origin/main..HEAD` lesen, um zu sehen, wie weit der vorige
+Versuch gekommen ist. Ein neuer Branch mit demselben Namen wäre die schlechteste Antwort:
+Der Push würde abgelehnt, und ein `--force` darüber verwürfe stillschweigend Arbeit, die
+schon getan ist.
+
 ## Aktualisieren: immer Rebase, nie Merge
 
 Ein Feature-Branch wird **ausnahmslos per Rebase** auf den Stand seines Quellbranchs

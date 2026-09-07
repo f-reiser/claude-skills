@@ -272,11 +272,29 @@ def fortschreiben(logpfad, pfad=DATEI, jetzt=None, vorgaenge=None):
     #  Ein Lauf ohne lesbaren Verbrauch wird trotzdem eingetragen. Ihn
     #  wegzulassen hiesse, ihn als kostenlos zu verbuchen - und genau die
     #  gescheiterten Laeufe sind oft die teuren.
+    #
+    #  Ihn mit 0 einzutragen waere aber genauso falsch, und zwar in die
+    #  gefaehrliche Richtung: Der Eintrag zaehlte einen Vorgang, ohne
+    #  Verbrauch beizusteuern, und zoege damit den Schnitt je Vorgang nach
+    #  unten. Die Schaetzung fuer den naechsten Durchgang wuerde mutiger,
+    #  gerade nachdem etwas schiefgegangen ist. Deshalb wird der bisherige
+    #  Schnitt angesetzt - und wenn es noch keinen gibt, zaehlt der
+    #  Eintrag keinen Vorgang mit, statt einen Schnitt von null zu stiften.
+    geschaetzt = False
+    if erg is None:
+        u, tok, v = summe(d["eintraege"], jetzt, LANG_H)
+        if v > 0:
+            erg = {"usd": u / v, "token": tok / v}
+            geschaetzt = True
+        else:
+            vorgaenge = 0
+
     d["eintraege"].append({
         "t": round(jetzt),
         "usd": (erg or {}).get("usd", 0.0),
         "token": (erg or {}).get("token", 0),
-        "gemessen": erg is not None,
+        "gemessen": not geschaetzt and erg is not None,
+        "geschaetzt": geschaetzt,
         "vorgaenge": vorgaenge,
         "lauf": os.environ.get("GITHUB_RUN_ID", ""),
     })
@@ -357,12 +375,43 @@ def selbsttest():
 
     #  12-14: Fortschreiben legt an, kuerzt und traegt auch Ungemessenes ein
     import tempfile
-    p = os.path.join(tempfile.mkdtemp(), DATEI)
-    d = fortschreiben(os.devnull, p, jetzt, 2)
-    pruefe("Eintrag ohne Messung", lambda: d["eintraege"][-1]["gemessen"] is False)
+    ordner = tempfile.mkdtemp()
+    p = os.path.join(ordner, DATEI)
+    log = os.path.join(ordner, "log.jsonl")
+    io.open(log, "w", encoding="utf-8").write(
+        '{"type":"result","total_cost_usd":1.0,"usage":{"output_tokens":80}}')
+
+    d = fortschreiben(log, p, jetzt, 2)
+    pruefe("gemessener Eintrag", lambda: d["eintraege"][-1]["gemessen"] is True)
     pruefe("Vorgaenge uebernommen", lambda: d["eintraege"][-1]["vorgaenge"] == 2)
-    d2 = fortschreiben(os.devnull, p, jetzt + AUFHEBEN_H * 3600 + 10, 1)
+    d2 = fortschreiben(log, p, jetzt + AUFHEBEN_H * 3600 + 10, 1)
     pruefe("Altes faellt raus", lambda: len(d2["eintraege"]) == 1)
+
+    #  Ohne Vorgeschichte gibt es keinen Schnitt, aus dem man schaetzen
+    #  koennte - dann darf der Eintrag auch keinen Vorgang mitzaehlen,
+    #  sonst stiftet er einen Schnitt von null.
+    d0 = fortschreiben(os.devnull, os.path.join(tempfile.mkdtemp(), DATEI),
+                       jetzt, 1)
+    pruefe("erster Lauf ungemessen zaehlt keinen Vorgang",
+           lambda: d0["eintraege"][-1]["vorgaenge"] == 0
+           and d0["eintraege"][-1]["gemessen"] is False)
+
+    #  Ein abgebrochener Lauf bekommt den bisherigen Schnitt angerechnet,
+    #  nicht null - sonst wuerde ausgerechnet ein Fehlschlag die
+    #  Schaetzung fuer den naechsten Durchgang mutiger machen.
+    p2 = os.path.join(tempfile.mkdtemp(), DATEI)
+    io.open(p2, "w", encoding="utf-8").write(json.dumps({"eintraege": [
+        {"t": jetzt - 3600, "usd": 2.0, "token": 100, "vorgaenge": 2,
+         "gemessen": True}]}))
+    d3 = fortschreiben(os.devnull, p2, jetzt, 1)
+    pruefe("Abbruch bekommt den Schnitt angerechnet",
+           lambda: d3["eintraege"][-1]["token"] == 50)
+    pruefe("Abbruch ist als geschaetzt gekennzeichnet",
+           lambda: d3["eintraege"][-1]["geschaetzt"] is True
+           and d3["eintraege"][-1]["gemessen"] is False)
+    pruefe("Abbruch senkt den Schnitt nicht",
+           lambda: (lambda s: s[1] / s[2])(summe(d3["eintraege"], jetzt,
+                                                 LANG_H)) == 50.0)
 
     #  15-24: die Entscheidung. Budget so gesetzt, dass 60 Token schon
     #  60 % des langen Budgets sind - ein Vorgang kostet im Schnitt 10,
