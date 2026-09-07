@@ -1,0 +1,16 @@
+{
+  "name": "reiser-skills",
+  "owner": {
+    "name": "f-reiser",
+    "url": "https://github.com/f-reiser"
+  },
+  "plugins": [
+    {
+      "name": "reiser-workflow",
+      "source": "./plugins/reiser-workflow",
+      "description": "Arbeitsweise fuer alle Softwareprojekte: GitHub-Issue-Workflow, Branch-Strategie, Versionierung und Releases, Dokumentationsmass, Repo-Hygiene.",
+      "version": "0.1.0",
+      "author": {"name": "f-reiser"}
+    }
+  ]
+}

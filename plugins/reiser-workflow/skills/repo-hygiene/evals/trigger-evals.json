@@ -1,0 +1,23 @@
+[
+  {"id": 1,  "should_trigger": true,  "query": "ich hab hier meinen ordner mit den ganzen auswertungsskripten fuer die messreihen, den will ich jetzt endlich auf github hochladen. ist aber einiges an kram drin was da glaub ich nicht reingehoert"},
+  {"id": 2,  "should_trigger": true,  "query": "kannst du mal die .gitignore anschauen? ich hab das gefuehl da rutscht staendig was durch was nicht ins repo soll"},
+  {"id": 3,  "should_trigger": true,  "query": "soll die config.json eigentlich mit ins repo oder besser nicht? da stehen die zugangsdaten fuer die testdatenbank drin"},
+  {"id": 4,  "should_trigger": true,  "query": "mach aus dem ordner hier bitte ein git repo und haeng es an das leere repo das ich auf github angelegt hab, heisst messwerte-2026. dann den ersten commit"},
+  {"id": 5,  "should_trigger": true,  "query": "ich hab dir den ordner Berichte/ neu angelegt mit den ganzen monatsauswertungen. muss ich da was beachten bevor wir das naechste mal committen?"},
+  {"id": 6,  "should_trigger": true,  "query": "wir wollen die excel-vorlage mit ins repo nehmen damit die tests in der pipeline ueberhaupt was zu pruefen haben. siehst du da ein problem?"},
+  {"id": 7,  "should_trigger": true,  "query": "bevor wir pushen schau bitte nochmal drueber ob da nichts drin ist was nicht rausgehen darf. sind auch ein paar pdfs vom kunden im ordner"},
+  {"id": 8,  "should_trigger": true,  "query": "warum ist die datei auswertung.py nicht im repo gelandet obwohl ich sie angelegt hab und git add -A gemacht hab?"},
+  {"id": 9,  "should_trigger": true,  "query": "ein kollege meinte ich soll unbedingt eine .gitattributes anlegen wegen der zeilenenden, sonst zerlegts mir irgendwann die batch dateien. brauch ich das wirklich?"},
+  {"id": 10, "should_trigger": true,  "query": "mist, ich glaub ich hab letzte woche die datei mit den api keys mit committet und gepusht. was mach ich jetzt am besten"},
+
+  {"id": 11, "should_trigger": false, "query": "kannst du mir den letzten commit zeigen und in ruhe erklaeren was da genau geaendert wurde? ich blick bei dem diff nicht durch"},
+  {"id": 12, "should_trigger": false, "query": "ich hab einen merge conflict in src/berechnung.py, beide seiten haben an der gleichen funktion rumgemacht. hilf mir das aufzuloesen"},
+  {"id": 13, "should_trigger": false, "query": "schreib mir bitte eine ordentliche commit message fuer die aenderungen die grad im arbeitsverzeichnis liegen"},
+  {"id": 14, "should_trigger": false, "query": "die xlsx in meinen downloads (Q4_final_FINAL.xlsx) hat in spalte C die umsaetze und in D die kosten, mach mir daraus bitte ein diagramm mit der marge"},
+  {"id": 15, "should_trigger": false, "query": "kannst du die personenbezogenen daten aus dieser teilnehmerliste.xlsx rausnehmen? ich muss die naechste woche an das landesamt weitergeben"},
+  {"id": 16, "should_trigger": false, "query": "erklaer mir nochmal genau was git rebase macht und wann ich das statt merge nehmen sollte"},
+  {"id": 17, "should_trigger": false, "query": "der CI lauf ist seit heute frueh rot, schau mal bitte woran das liegt"},
+  {"id": 18, "should_trigger": false, "query": "erstell mir bitte ein README fuer das projekt, mit kurzer beschreibung und einer anleitung zum aufsetzen"},
+  {"id": 19, "should_trigger": false, "query": "kann ich die ganzen alten branches loeschen die schon in main gemerged sind? sind bestimmt 20 stueck"},
+  {"id": 20, "should_trigger": false, "query": "ich brauch einen neuen branch fuer das umbau-feature und danach einen pull request gegen main"}
+]

@@ -1,0 +1,112 @@
+---
+name: semver-und-releases
+description: >
+  Versionsnummern nach Semantic Versioning und das Bauen von GitHub-Releases mit
+  annotierten Tags und Download-Dateien. Regelt, wann MAJOR, MINOR oder PATCH steigt, wer
+  das darf, wo die Version im Projekt steht und wie ein Release entsteht. Nutze diesen
+  Skill, wenn der Nutzer „Release bauen" sagt oder ein Release, einen Tag, eine neue
+  Version oder Release Notes verlangt; wenn zu entscheiden ist, ob eine Änderung MINOR
+  oder PATCH ist; wenn eine Versionsnummer irgendwo im Projekt hochgezählt werden soll;
+  und wenn ein Projekt noch gar keine Versionierung hat. Gilt für alle Softwareprojekte.
+---
+
+# Versionierung und Releases
+
+## Semantic Versioning
+
+`MAJOR.MINOR.PATCH` nach <https://semver.org/>.
+
+| Teil | steigt bei | wer |
+|---|---|---|
+| **MAJOR** | Bruch der Kompatibilität | **nur der Nutzer** |
+| **MINOR** | neue Funktion, abwärtskompatibel | Claude |
+| **PATCH** | Fehlerbehebung, abwärtskompatibel | Claude |
+
+MINOR setzt PATCH auf 0, MAJOR setzt beide auf 0.
+
+**Vor dem ersten Release** läuft die Entwicklung ab `0.1.0`. In `0.x` gilt keine
+Kompatibilitätszusage; neue Funktionen erhöhen MINOR, Korrekturen PATCH. **Das erste
+Release ist immer `1.0.0`** — nie `0.x` als Release veröffentlichen.
+
+Steigt aus deiner Sicht MAJOR an, ist das keine Entscheidung, die du triffst: sag es und
+begründe, woran du den Bruch festmachst.
+
+## Wo die Version steht
+
+Genau eine Quelle je Projekt. Gibt es keine natürliche (etwa `package.json`,
+`pyproject.toml`, `*.csproj`), dann eine Datei `VERSION` im Wurzelverzeichnis mit der
+nackten Nummer und einem Zeilenumbruch.
+
+Muss die Nummer an weiteren Stellen auftauchen, wird sie von dort **abgeleitet**, nicht
+abgeschrieben. Eine zweite gepflegte Fassung läuft auseinander — die Frage ist nur, wann.
+
+Nicht zu verwechseln mit projekteigenen Stand-Angaben, die etwas anderes versionieren
+(etwa `ANLEITUNG_STAND` im Stoffverteilungsplan, das nur das Anleitungsblatt betrifft).
+
+## Ein Release bauen
+
+Schlüsselwort des Nutzers: **„Release bauen"**, wahlweise mit Nummer
+(„Release bauen 0.3.0"). Ohne Schlüsselwort entsteht kein Release.
+
+### Vorbedingungen
+
+- Der Stand liegt auf **`main`**, nichts Offenes im Arbeitsverzeichnis
+- **Alle Tests grün**, auch die CI auf `main`
+- Die Version ist gesetzt, committet und gepusht
+
+Ist eine davon verletzt: nicht bauen, sondern sagen welche.
+
+### Ablauf
+
+```bash
+export GH_TOKEN=$(gh auth token --user reiser-claude-agent)
+git checkout main && git pull --ff-only
+
+# 1. Version festlegen, Nummer bestaetigen lassen, committen
+
+# 2. Annotierter Tag - nie ein Lightweight-Tag
+git tag -a v0.3.0 -m "Release 0.3.0"
+git push origin v0.3.0
+
+# 3. Release samt Download-Dateien
+gh release create v0.3.0 --title "0.3.0" --notes-file <datei> <asset> ...
+```
+
+**Annotiert (`-a`), nicht leichtgewichtig.** Ein annotierter Tag ist ein eigenes Objekt
+mit Autor, Datum und Meldung und lässt sich signieren; ein leichtgewichtiger Tag ist nur
+ein Zeiger und sagt später nichts darüber, wer wann was veröffentlicht hat.
+
+**Ein veröffentlichter Tag wird nie verschoben oder gelöscht.** Wer ihn schon gezogen hat,
+bekommt sonst stillschweigend etwas anderes als alle anderen. Ist ein Release falsch, folgt
+ein neues mit höherer Nummer.
+
+### Die Dateien zum Herunterladen
+
+Das sind die **Release Assets**: die Dateien, die ein Anwender tatsächlich braucht — nicht
+der Quelltext, den GitHub ohnehin automatisch als `.zip` und `.tar.gz` anhängt.
+
+Also das gebaute Ergebnis: die fertige Anwendungsdatei, das Archiv, die auslieferbare
+Vorlage. Wo das Ergebnis nicht im Repository liegt (weil es erzeugt wird oder binär ist),
+wird es für das Release gebaut und dann angehängt.
+
+Nichts anhängen, was nicht hinaus soll — vor jedem Release prüfen, ob eine Datei
+Zugangsdaten oder personenbezogene Inhalte trägt.
+
+### Release Notes
+
+Aus dem, was seit dem letzten Tag nach `main` gekommen ist:
+
+```bash
+git log --oneline <letzter-tag>..HEAD
+gh pr list --state merged --search "merged:>=<datum>" --json number,title
+```
+
+Geordnet nach dem, was den Anwender betrifft: neue Funktionen, behobene Fehler, Änderungen
+im Verhalten. Verweise auf Issues und Pull Requests statt Wiederholung — dort steht die
+Begründung schon.
+
+## Wenn ein Projekt noch keine Versionierung hat
+
+Kein stilles Nachrüsten. Sag, dass die Quelle fehlt, schlage `0.1.0` und die Datei vor,
+und lass den Nutzer zustimmen — die erste Nummer legt fest, wie alle folgenden gelesen
+werden.

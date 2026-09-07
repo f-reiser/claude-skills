@@ -1,0 +1,77 @@
+---
+name: erklaeren-mit-mass
+description: >
+  Prüft jede Erklärung darauf, ob sie ihren Platz verdient — in Code-Kommentaren,
+  Commit-Meldungen, Pull-Request-Texten, Issue-Kommentaren, README- und Doku-Dateien.
+  Grundsatz: WARUM statt WAS, und so wenig wie möglich, weil jede Zeile Dokumentation
+  gelesen und gepflegt werden muss. Nutze diesen Skill, bevor du einen Kommentar, eine
+  Commit-Meldung, einen PR-Text, ein Issue oder einen Doku-Abschnitt schreibst oder
+  überarbeitest, und wenn zu entscheiden ist, ob etwas überhaupt dokumentiert gehört.
+  Ebenso, wenn Text gekürzt, aufgeräumt oder von Füllmaterial befreit werden soll.
+---
+
+# Erklären mit Maß
+
+## Der Maßstab
+
+Zwei Regeln, die zusammen gehören und einzeln in die Irre führen:
+
+1. **WARUM statt WAS.** Was der Code tut, steht im Code. Was ihn erklärt, sind die
+   Gründe: eine versteckte Bedingung, ein Vorfall, eine verworfene Alternative.
+2. **So wenig wie möglich.** Dokumentation ist kein Gratisgewinn. Sie wird gelesen,
+   veraltet und muss gepflegt werden. Jede Zeile, die nichts trägt, macht die
+   tragenden Zeilen schwerer auffindbar.
+
+Regel 1 allein erzeugt die typische Fehlform: lange, gut begründete Absätze, die
+niemand liest. Erst Regel 2 macht sie brauchbar.
+
+## Die Probe
+
+Vor jedem Absatz, den du schreiben willst:
+
+**Was verliert der Leser, wenn das hier fehlt?** Fällt die Antwort schwer, streich ihn.
+
+Und danach: **Was davon steht schon woanders?** Ein Verweis ist billiger als eine
+zweite Fassung — und die zweite Fassung ist die, die veraltet.
+
+## Woran man zu viel erkennt
+
+- Der Text erklärt die eigene Entscheidung, statt die Sache zu benennen
+  („hier bewusst keine Zahl, die beim nächsten Mal schon wieder falsch ist")
+- Er begründet, was niemand in Frage gestellt hat
+- Er wiederholt in Prosa, was die darunterstehende Tabelle, Signatur oder Liste zeigt
+- Er erzählt den Weg statt das Ergebnis („zuerst habe ich …, dann …")
+
+**Beispiel.** Statt
+
+> Wie viele Prüfungen es sind, steht in der Schlusszeile dieses Berichts
+> („Ergebnis: … bestanden, … durchgefallen"), die Abschnitte sind darin einzeln
+> überschrieben — hier bewusst keine Zahl, die beim nächsten neuen Check schon
+> wieder falsch ist.
+
+reicht
+
+> Anzahl und Ergebnis stehen am Ende des Berichts.
+
+Der Rest war Begründung für eine Entscheidung, die niemand nachvollziehen muss —
+die gehört, wenn überhaupt, in die Commit-Meldung.
+
+## Wo was hingehört
+
+| | trägt |
+|---|---|
+| Code-Kommentar | die nicht offensichtliche Bedingung, der Fallstrick, der Grund für eine ungewöhnliche Lösung |
+| Commit-Meldung | warum diese Änderung, was sie ersetzt, welche Alternative verworfen wurde |
+| Pull Request | was ein Prüfer wissen muss, um zuzustimmen; alles Weitere als Verweis aufs Issue |
+| Issue | die Sache selbst, die Entscheidung, der Stand |
+| Doku im Repo | was länger gilt als ein Commit |
+
+Dieselbe Begründung an zwei dieser Stellen ist einmal zu viel.
+
+## Wenn es länger sein darf
+
+Kürze ist kein Selbstzweck. Länger darf werden, was Schaden verhindert: ein Fallstrick,
+der schon einmal Zeit gekostet hat, eine Reihenfolge, deren Vertauschen Daten zerstört,
+eine Regel, die ohne ihren Grund willkürlich wirkt und deshalb umgangen würde.
+
+Der Unterschied ist nicht die Länge, sondern ob jemand ohne den Text einen Fehler macht.
