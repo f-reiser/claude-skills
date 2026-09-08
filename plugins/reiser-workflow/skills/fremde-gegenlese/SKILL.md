@@ -120,7 +120,7 @@ einer Datei durchsuchte, aber nicht den kompilierten Anteil; dort standen die Da
 
 ## Wohin mit dem Ergebnis
 
-Jeder **bestätigte** Befund wird ein Issue mit dem Label `Gegenlese`
+Jeder **bestätigte** Befund wird ein Issue mit dem Label `GegenleseBefund`
 (`github-issue-workflow`), kein stiller Fix im laufenden Branch — sonst weiß hinterher
 niemand, dass die Gegenlese etwas gefunden hat. Ein Befund über eine Prüfung, die
 strukturell nicht anschlagen kann, trägt zusätzlich `Pruefluecke`.
@@ -128,6 +128,30 @@ strukturell nicht anschlagen kann, trägt zusätzlich `Pruefluecke`.
 Jeder **nicht bestätigte** Befund wird mit einer Zeile Begründung verworfen, aber sichtbar:
 als Notiz im Pull Request oder im Issue. Still verworfene Befunde kommen bei der nächsten
 Gegenlese wieder, und dann prüfst du sie ein zweites Mal.
+
+## Wenn der Vorgang das Label `Gegenlese` trägt
+
+Damit fordert der Nutzer eine Gegenlese für **genau diesen** Vorgang an, zusätzlich zu
+allem, was ohnehin fällig wäre. Sie läuft, wenn die Arbeit fertig ist — nicht vorher.
+
+Der Endzustand ist die eigentliche Zusage, und er ist vollständig festgelegt:
+
+| | |
+|---|---|
+| `Gegenlese` | **immer** entfernt |
+| `GegenleseBefund` | gesetzt, wenn es bestätigte Befunde gab — sonst ausdrücklich nicht |
+| Kommentar im Issue | **immer** |
+
+**Gab es Befunde:** jeder bestätigte als Kommentar **im Issue**, mit Stelle und
+Sicherheitsgrad. Hier nicht als neues Issue — der Nutzer will sie dort sehen, wo er sie
+angefordert hat.
+
+**Gab es keine:** ein Kommentar mit einer **stichpunktartigen Liste dessen, was geprüft
+wurde**. Ohne sie weiß später niemand, ob die Prüfung schon gelaufen ist, und sie läuft
+ein zweites Mal — teuer und ohne Ertrag. „Keine Befunde" allein leistet das nicht; die
+Liste ist der eigentliche Wert des Durchgangs.
+
+Bleibt `Gegenlese` stehen, gilt die Arbeit als **nicht fertig**.
 
 ## Nicht dasselbe wie ein Code-Review
 
