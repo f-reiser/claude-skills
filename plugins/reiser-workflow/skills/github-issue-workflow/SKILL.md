@@ -23,10 +23,10 @@ Rückfragen, Befunde und was tatsächlich geändert wurde.
 
 Daraus folgt: **Was du beim Abarbeiten lernst, gehört ins Issue, nicht in die Chatantwort.**
 
-Vier Skills gelten mit: `git-branch-strategie` (Branches, Merges, Konto — **vor dem ersten
-Commit lesen**), `test-driven-development` (für jede Änderung am Code),
-`fremde-gegenlese` (vor dem Pull Request) und `erklaeren-mit-mass` (für jeden Text, den du
-schreibst).
+Drei Skills gelten immer mit: `git-branch-strategie` (Branches, Merges, Konto — **vor dem
+ersten Commit lesen**), `test-driven-development` (für jede Änderung am Code) und
+`erklaeren-mit-mass` (für jeden Text, den du schreibst). `fremde-gegenlese` kommt dazu,
+aber nur auf Anforderung — siehe Schritt 7.
 
 ## Welches Repository
 
@@ -101,9 +101,10 @@ Jedes Issue trägt einen Typ. Welche es gibt und wer ihn setzen darf:
    Merge und nähme dir Schritt 9 aus der Hand.
 6. **Push** des eigenen Branches, danach Tests und CI abwarten (`gh run watch <id>
    --exit-status`). Nur bei Grün weiter.
-7. **Gegenlesen lassen** nach `fremde-gegenlese` — wann sie fällig ist und was mit den
-   Befunden geschieht, steht dort. Trägt der Vorgang das Label `Gegenlese`, ist sie
-   Pflicht, und der Endzustand der Label ist dort festgelegt.
+7. **Nur wenn der Vorgang das Label `Gegenlese` trägt:** gegenlesen lassen nach
+   `fremde-gegenlese`. Ohne das Label entfällt dieser Schritt — auch dann, wenn du einen
+   Test angefasst hast. Fällt dir auf, dass eine fremde Sicht hier gut täte, schreib es
+   in den Pull Request, statt sie ungefragt zu fahren.
 8. **Dokumentieren, dann Pull Request, dann Label:** Kommentar ins Issue (was geändert
    wurde und warum), `gh pr create`, danach `gh issue edit <nr> --remove-label
    Einarbeiten`. Das Label zuletzt — bei einem Abbruch dazwischen wäre das Issue sonst
