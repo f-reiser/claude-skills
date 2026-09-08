@@ -99,8 +99,17 @@ Jedes Issue trägt einen Typ. Welche es gibt und wer ihn setzen darf:
    Zusatzänderung.
 5. **Commit** mit `Refs #<nr>` — nicht `Fixes`, das schlösse das Issue automatisch beim
    Merge und nähme dir Schritt 9 aus der Hand.
-6. **Push** des eigenen Branches, danach Tests und CI abwarten (`gh run watch <id>
-   --exit-status`). Nur bei Grün weiter.
+6. **Push** des eigenen Branches, danach die Tests grün sehen — **nur bei Grün weiter.**
+   Woher das Grün kommt, hängt von der Umgebung ab:
+
+   - **Läuft die CI auf den Push an**, warte sie ab: `gh run watch <id> --exit-status`.
+   - **Läuft sie nicht an**, führ die Prüfungen des Projekts selbst aus (bei diesem hier
+     `Makros/pruefe_alles.py`) und sag im Pull Request, dass das Grün von dort kommt.
+
+   Der zweite Fall ist auf einem GitHub-Runner der Normalfall: Ein Push mit dem
+   `GITHUB_TOKEN` eines Workflows löst **keine** weiteren Workflows aus — GitHub
+   verhindert so Endlosschleifen. Die CI startet dann erst mit dem Pull Request, also
+   nach Schritt 8. Wer in Schritt 6 auf sie wartet, wartet vergebens.
 7. **Nur wenn der Vorgang das Label `Gegenlese` trägt:** gegenlesen lassen nach
    `fremde-gegenlese`. Ohne das Label entfällt dieser Schritt — auch dann, wenn du einen
    Test angefasst hast. Fällt dir auf, dass eine fremde Sicht hier gut täte, schreib es
