@@ -161,6 +161,40 @@ git rebase -i origin/main
 git push --force-with-lease
 ```
 
+### Auch nach einer Gegenlese, und dort besonders
+
+**Befunde aus `fremde-gegenlese` werden eingefaltet, nicht angehängt.** Der häufigste Fall
+ist nicht der Tippfehler, sondern dieser: Der Pull Request steht, die Gegenlese meldet,
+du korrigierst — und wer den Pull Request dann liest, liest deinen Denkweg statt der
+Änderung. Bei drei Befunden sind das drei Commits, in denen du dich selbst berichtigst.
+
+Das kostet fremde Zeit, und zwar genau die des Menschen, der zustimmen soll.
+
+Also: korrigieren, dann `git reset --soft <basis>` und **einmal** committen, was am Ende
+dasteht. Die Meldung beschreibt den Endstand, nicht den Weg dorthin.
+
+**Zwei Dinge überleben das Zusammenfassen trotzdem:**
+
+- **Was jemand später wissen muss, um die Änderung nicht rückgängig zu machen.** „Diese
+  Berechtigung sieht überflüssig aus, ist sie aber nicht, weil …" gehört in die Meldung —
+  das ist Projektwissen, keine Selbstkorrektur.
+- **Ein Befund, den du geprüft und verworfen hast**, samt Begründung. Sonst kommt er bei
+  der nächsten Gegenlese wieder.
+
+**Zieh die abhängigen Branches mit.** Nach dem Umschreiben sitzen sie auf Commits, die es
+nicht mehr gibt:
+
+```bash
+git rebase --onto <branch> <alte-spitze> <abhaengiger-branch>
+git push --force-with-lease origin <abhaengiger-branch>
+```
+
+Und danach nachweisen, dass nur die Historie anders ist und nicht das Ergebnis:
+
+```bash
+git diff <alte-spitze> <branch>     # muss leer sein
+```
+
 ## Wie der Pull Request nach main kommt
 
 | Fall | Modus |
