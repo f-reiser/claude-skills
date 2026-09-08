@@ -7,7 +7,7 @@ Projekten referenziert — damit dieselbe Regel nicht in fünf Repositories getr
 
 | Skill | wofür |
 |---|---|
-| `github-issue-workflow` | Issues abarbeiten: Auswahl, Ablauf, Label, Typen, Prioritäten, Budget unbeaufsichtigter Läufe |
+| `github-issue-workflow` | Issues abarbeiten: Auswahl, Ablauf, Label, Typen, Prioritäten, Regeln für unbeaufsichtigte Läufe |
 | `git-branch-strategie` | Feature-Branches, Rebase, Merge-Konflikte, Pull Requests, GitHub-Konten |
 | `test-driven-development` | erst der rote Test, dann der Code; Mutationstest für bestehende Suiten |
 | `fremde-gegenlese` | Tests und Auslegungen durch einen unabhängigen Agenten prüfen lassen |
@@ -49,15 +49,12 @@ dort gebraucht werden, bleiben Konto-Skills — sie haben mit Softwareprojekten
 Semantic Versioning und Releases: `semver-und-releases`. Tag-Schema hier:
 `reiser-workflow--v<version>`.
 
-Beim Release sind **drei** Stellen zu ziehen — die ersten beiden erzwingt das
-Plugin-Format, die dritte hängt daran, dass ein fremder Workflow ein Skript von hier
-ausführt:
+Beim Release sind **zwei** Stellen zu ziehen, beide vom Plugin-Format erzwungen:
 
 1. `.claude-plugin/marketplace.json`
 2. `plugins/reiser-workflow/.claude-plugin/plugin.json`
-3. der `ref:` in `plugins/reiser-workflow/skills/github-issue-workflow/references/verbrauch.md`
-   und in jedem Projekt-Workflow, der ihn übernommen hat
 
-`claude plugin tag` prüft 1 und 2 gegeneinander und verweigert das Release, wenn sie
-auseinanderliegen. **Nummer 3 prüft niemand** — wird sie vergessen, führt der Vier-Stunden-Lauf
-still die alte Skriptfassung weiter aus.
+`claude plugin tag` prüft sie gegeneinander und verweigert das Release, wenn sie
+auseinanderliegen. Dieses Repository enthält bewusst **keinen ausführbaren Code**, den ein
+Projekt-Workflow über einen Tag holen müsste — es gibt also keine dritte Stelle, die beim
+Hochzählen vergessen werden kann.

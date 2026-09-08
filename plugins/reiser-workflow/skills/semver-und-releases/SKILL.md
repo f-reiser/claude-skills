@@ -46,10 +46,10 @@ die Ausnahme nur mit einer **Prüfung, die den Gleichlauf erzwingt** — hier
 `claude plugin tag`, das das Release verweigert, wenn beide auseinanderliegen. Ohne
 solche Prüfung ist die zweite Fassung kein Sonderfall, sondern der Fehler.
 
-Führe außerdem im Kopf, **wer die Nummer sonst noch liest**: Ein fremder Workflow, der
-ein Skript dieses Repositories über einen Tag holt, hängt an genau dieser Nummer. Solche
-Stellen gehören auf die Release-Checkliste, sonst führt er nach dem nächsten Release
-weiter die alte Fassung aus.
+Führe außerdem im Kopf, **wer die Nummer sonst noch liest**. Holt sich irgendwo ein
+fremder Workflow etwas aus dem Projekt über einen Tag, hängt er an genau dieser Nummer;
+solche Stellen gehören auf die Release-Checkliste, sonst führt er nach dem nächsten
+Release weiter die alte Fassung aus. Am billigsten ist es, gar keine zu haben.
 
 Nicht zu verwechseln mit projekteigenen Stand-Angaben, die etwas anderes versionieren
 (etwa `ANLEITUNG_STAND` im Stoffverteilungsplan, das nur das Anleitungsblatt betrifft).
