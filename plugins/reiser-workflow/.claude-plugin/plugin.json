@@ -1,7 +1,7 @@
 {
   "name": "reiser-workflow",
   "description": "Arbeitsweise fuer alle Softwareprojekte: GitHub-Issue-Workflow, Branch-Strategie, Versionierung und Releases, Dokumentationsmass, Repo-Hygiene, testgetriebenes Vorgehen, fremde Gegenlese.",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "author": {
     "name": "f-reiser"
   }
