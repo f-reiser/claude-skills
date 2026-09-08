@@ -102,7 +102,8 @@ Jedes Issue trägt einen Typ. Welche es gibt und wer ihn setzen darf:
 6. **Push** des eigenen Branches, danach Tests und CI abwarten (`gh run watch <id>
    --exit-status`). Nur bei Grün weiter.
 7. **Gegenlesen lassen** nach `fremde-gegenlese` — wann sie fällig ist und was mit den
-   Befunden geschieht, steht dort.
+   Befunden geschieht, steht dort. Trägt der Vorgang das Label `Gegenlese`, ist sie
+   Pflicht, und der Endzustand der Label ist dort festgelegt.
 8. **Dokumentieren, dann Pull Request, dann Label:** Kommentar ins Issue (was geändert
    wurde und warum), `gh pr create`, danach `gh issue edit <nr> --remove-label
    Einarbeiten`. Das Label zuletzt — bei einem Abbruch dazwischen wäre das Issue sonst
