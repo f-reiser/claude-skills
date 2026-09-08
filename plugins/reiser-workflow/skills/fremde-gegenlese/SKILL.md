@@ -6,11 +6,11 @@ description: >
   Anforderung selbst aus und meldet nur, statt zu ändern. Deckt Interpretationsfehler und
   wiederholte falsche Annahmen auf, die kein eigener Test findet, weil Test und Code aus
   derselben Auslegung stammen. Nutze diesen Skill immer, wenn ein Test, ein Check oder eine
-  Prüfebene neu entsteht oder umgebaut wird; bevor ein Pull Request herausgeht, der mehr als
-  eine Funktion berührt; wenn eine Anforderung mehrdeutig war und du dich für eine Lesart
-  entschieden hast; nach jedem gemeldeten Fehler, den die bestehenden Tests nicht gefunden
-  haben; und wenn der Nutzer nach Gegenlese, Vier-Augen-Prinzip, externer Prüfung oder einem
-  zweiten Agenten fragt. Gilt für jedes Softwareprojekt.
+  Sie läuft NUR auf Anforderung des Nutzers: wenn ein Vorgang das Label `Gegenlese` trägt
+  oder er im Gespräch nach Gegenlese, Vier-Augen-Prinzip, externer Prüfung oder einem
+  zweiten Agenten fragt. Nutze diesen Skill in genau diesen Fällen — und sonst nicht, auch
+  nicht bei einem neuen Test oder einem großen Pull Request. Gilt für jedes
+  Softwareprojekt.
 ---
 
 # Fremde Gegenlese
@@ -41,18 +41,24 @@ Belegt, nicht vermutet:
 
 ## Wann
 
-| Anlass | |
-|---|---|
-| Ein Test, Check oder eine Prüfebene entsteht oder wird umgebaut | **immer** — der Test ist dann selbst der Prüfgegenstand |
-| Eine Anforderung war mehrdeutig und du hast dich für eine Lesart entschieden | **immer** |
-| Ein Pull Request berührt mehr als eine Funktion | **immer**, vor dem Erstellen |
-| Ein gemeldeter Fehler, den keine bestehende Prüfung gefunden hat | **immer**, mit der Zusatzfrage: *welche Prüfung hätte das finden müssen, und warum hat sie es nicht?* |
-| Eine Zusage, deren Bruch nicht rückholbar ist (veröffentlichte Daten, gelöschte Historie, ausgelieferte Datei) | **immer**, und mit zwei Agenten |
-| Einzeiler, Tippfehler, reine Textänderung | nein |
+**Genau dann, wenn der Nutzer sie anfordert** — am Vorgang über das Label `Gegenlese`,
+oder im Gespräch. Sonst nie von selbst.
 
-**Sie fällt nicht aus, weil die Zeit knapp ist.** Das ist der einzige Grund, aus dem sie
-je ausgefallen ist, und jedes Mal stand hinterher ein Befund im Raum, den sie gefunden
-hätte. Wenn du sie nicht durchführst, sag das ausdrücklich und nenne den Grund — nicht
+Das war einmal anders: Der Skill zählte Anlässe auf, bei denen sie *immer* fällig sei —
+jeder neue Test, jeder Pull Request über mehr als eine Funktion. Gemessen an einem
+Durchgang, der dadurch **11,89 USD** kostete, trägt das nicht: Zwei unabhängige Agenten
+lesen den Code jeweils von null, und das fiel bei jeder Teständerung an, ob sie es wert
+war oder nicht.
+
+Die Entscheidung liegt jetzt beim Nutzer, und zwar aus einem Grund, den er selbst nennt:
+Er hat ein Gefühl dafür, wo eine fremde Sicht nötig ist. Ein Automatismus hat das nicht,
+er hat nur eine Bedingung.
+
+**Fällt dir beim Arbeiten auf, dass eine Gegenlese hier gut täte, sag es** — im Pull
+Request oder im Issue, mit einem Satz warum. Anfordern tut sie der Nutzer.
+
+Umgekehrt gilt weiter: Ist sie angefordert, fällt sie **nicht** aus, weil die Zeit knapp
+ist. Führst du sie nicht durch, sag das ausdrücklich und nenne den Grund — nicht
 stillschweigend weglassen.
 
 ## Die fünf Regeln des Auftrags

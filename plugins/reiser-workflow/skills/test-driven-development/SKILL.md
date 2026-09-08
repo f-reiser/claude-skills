@@ -62,8 +62,10 @@ Andere API, andere Datenquelle, andere Blickrichtung. Rechnet der Code vorwärts
 der Test rückwärts. Konkret: *Bestimmt der Code eine Größe mit einer Funktion, darf der
 Test sie nicht mit derselben Funktion nachprüfen.*
 
-**Gegenmittel von außen:** Jeder neue oder umgebaute Test geht durch `fremde-gegenlese`.
-Der eigene Kopf kommt an diesen Fehler nicht zuverlässig heran — er ist der Fehler.
+**Gegenmittel von außen:** `fremde-gegenlese`, wenn der Nutzer sie anfordert. Der eigene
+Kopf kommt an diesen Fehler nicht zuverlässig heran — er ist der Fehler. Genau deshalb
+wiegt das Gegenmittel im eigenen Kopf hier umso schwerer: Es ist im Regelfall das
+einzige.
 
 ## Bestehende Testsuiten: Mutationstest
 
