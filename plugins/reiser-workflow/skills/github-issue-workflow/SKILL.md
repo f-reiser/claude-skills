@@ -174,10 +174,22 @@ heben, nicht in diesen Text.
 Was hier steht, begrenzt deshalb nur, wie viel du **innerhalb** eines gestarteten Laufs
 tust:
 
-**Ein Vorgang pro Durchgang.** Keine Ausnahme, kein Nachrechnen. Ein unbeaufsichtigter
-Lauf teilt sich das Nutzungslimit mit dem Nutzer und merkt nicht, wenn er es leerräumt;
-eine feste, kleine Zahl begrenzt den Schaden ohne jeden Messaufwand. Der nächste
-Durchgang kommt ohnehin.
+**Höchstens drei Vorgänge pro Durchgang.** Eine feste, kleine Zahl — kein Nachrechnen,
+keine Ausnahme nach oben.
+
+Warum überhaupt eine Grenze: Ein unbeaufsichtigter Lauf teilt sich das Nutzungslimit mit
+dem Nutzer und merkt nicht, wenn er es leerräumt.
+
+Warum drei und nicht mehr: Jeder Vorgang wird ein eigener Pull Request, und die liest ein
+Mensch. Zu viele gleichzeitig offen heißt außerdem, dass sie einander in die Quere
+kommen — dann verbringt der nächste Durchgang seine Zeit mit Merge-Konflikten statt mit
+Arbeit.
+
+Wie viele wirklich anliegen, steuert der Nutzer über die Vergabe der Label. Sind es
+weniger als drei, ist der Durchgang eben kürzer; **such dir keine Arbeit dazu.**
+
+Sind mehrere angefangene Vorgänge offen (abgebrochene Läufe), gehen die **vor** neuen.
+Der Workflow reicht sie dir samt Branch an.
 
 Bei einem Start von Hand entfällt auch das — dann sitzt der Nutzer davor und sieht, was
 er ausgibt.
