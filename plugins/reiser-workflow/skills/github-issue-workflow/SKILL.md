@@ -120,6 +120,9 @@ Jedes Issue trägt einen Typ. Welche es gibt und wer ihn setzen darf:
    unsichtbar.
 9. **Nach dem Merge** das Issue schließen, falls noch offen.
 
+**Während alldem gilt „Sichern, während du arbeitest" (unten): committen und
+pushen, sobald etwas Ganzes fertig ist, statt erst bei Schritt 6.**
+
 **Bei dauerhaft roten Tests:** wie eine Rückfrage behandeln (unten). Ein Issue, das rot
 bleibt und sein Label behält, wird beim nächsten Durchgang erneut gezogen und verbrennt
 jedes Mal Zeit.
@@ -190,6 +193,39 @@ weniger als drei, ist der Durchgang eben kürzer; **such dir keine Arbeit dazu.*
 
 Sind mehrere angefangene Vorgänge offen (abgebrochene Läufe), gehen die **vor** neuen.
 Der Workflow reicht sie dir samt Branch an.
+
+### Sichern, während du arbeitest — nicht am Schluss
+
+**Ein Lauf kann jederzeit sterben**, und du merkst es nicht vorher: Zeitfenster
+abgelaufen, Nutzungslimit erschöpft, Runner weg. Was dann nicht committet und gepusht
+ist, ist weg — und der nächste Lauf fängt bei null an. In diesem Projekt ist genau das
+passiert: zwanzig Minuten Arbeit, kein Branch, kein Kommentar, keine Spur.
+
+Daraus folgen zwei Gewohnheiten, die nichts kosten:
+
+**Committe und pushe, sobald etwas Ganzes fertig ist** — ein roter Test, ein grüner
+Test, eine Analyse, ein Teilschritt. Nicht erst am Ende. Die Historie wird dadurch lang
+und unübersichtlich; das ist kein Einwand, denn vor dem Pull Request räumst du sie
+ohnehin per Rebase auf (`git-branch-strategie` → „Historie aufräumen"). Wird es schon
+zwischendurch unübersichtlich, räum schon zwischendurch auf. **Lieber ein Commit zu viel
+als einer zu wenig.**
+
+**Halte einen Fortschrittskommentar am Vorgang aktuell.** Er hat zwei Leser mit
+derselben Frage: der Mensch, der wissen will, wie weit es ist, und der Folgelauf, der
+wissen muss, wo er einsteigt. Hinein gehört, was davon abhängt — was du herausgefunden
+hast, was schon steht, was als Nächstes drankommt. Nicht dein Denkweg, und nicht das,
+was ohnehin im Diff steht.
+
+Es ist **ein** Kommentar, der fortgeschrieben wird, kein Faden aus Statusmeldungen: Ein
+Vorgang mit zwölf davon ist unlesbar, und zwar für beide Leser. Also bearbeiten statt
+neu anlegen. Wird er lang, lösch heraus, was erledigt und nicht mehr wissenswert ist —
+er ist ein Stand, kein Protokoll.
+
+Wie der Kommentar technisch angelegt und wiedergefunden wird, sagt dir der Workflow;
+er tut es, bevor du startest. **Leg keinen zweiten an.**
+
+**Beides gilt auch, wenn du glaubst, gleich fertig zu sein.** Genau dann wurde es bisher
+gelassen — und genau dann ist der Verlust am größten.
 
 Bei einem Start von Hand entfällt auch das — dann sitzt der Nutzer davor und sieht, was
 er ausgibt.
