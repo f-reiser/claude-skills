@@ -229,18 +229,24 @@ das falsch aussieht, ohne dass es auffällt.
 | `git push` | wer pushen darf | Credential-Helper (folgt `GH_TOKEN`) |
 | Commit-Autor | was die Historie sagt | `user.name` / `user.email` |
 
+**Welche Konten das konkret sind, steht nicht hier.** Kontonamen sind personenbezogen;
+dieses Repository ist öffentlich. Die tatsächliche Zuordnung — welches Konto Bot, welches
+Admin, für welche Organisation — gehört in einen lokalen Skill außerhalb dieses
+Repositories. Hier steht nur der Mechanismus, mit Platzhaltern.
+
 **Laufende Arbeit** — Commits, Branches, Issues, Pull Requests, Tags und Releases —
-unter dem Bot:
+unter dem Bot-Konto:
 
 ```bash
-export GH_TOKEN=$(gh auth token --user reiser-claude-agent)
-git -c user.name="reiser-claude-agent" \
-    -c user.email="325701350+reiser-claude-agent@users.noreply.github.com" \
+export GH_TOKEN=$(gh auth token --user <Bot-Konto>)
+git -c user.name="<Bot-Konto>" \
+    -c user.email="<GitHub-User-ID>+<Bot-Konto>@users.noreply.github.com" \
     commit -m "..."
 ```
 
 Die noreply-Adresse ist geprüft: GitHub verknüpft damit erstellte Commits mit dem
-Bot-Account, ohne dass eine private Adresse im Repository steht.
+Bot-Account, ohne dass eine private Adresse im Repository steht. Die User-ID liefert
+`gh api users/<Bot-Konto> --jq .id`.
 
 **Beim Ändern eines bestehenden Commits zusätzlich `--reset-author`:**
 
@@ -266,12 +272,12 @@ Bewusst repo-lokal, nicht global — sonst laufen auch die eigenen Pushes des Nu
 
 Ein Release ist zwar eine Veröffentlichung, aber keine Verwaltungsarbeit: `push` genügt
 dafür, und ausgelöst wird es ohnehin nur, wenn der Nutzer „Release bauen" sagt
-(`semver-und-releases`). Es läuft deshalb unter dem Bot wie jeder Commit.
+(`semver-und-releases`). Es läuft deshalb unter dem Bot-Konto wie jeder Commit.
 
-**Nicht mit dem Bot:** Repositories anlegen, Branch-Schutzregeln, Collaborators, Label und
-Issue-Typen einrichten. Der Bot hat dafür bewusst keine Rechte (`push`, kein `admin`).
-Solche Arbeiten laufen über den Account des Nutzers und werden vorher angesprochen —
-`GH_TOKEN=$(gh auth token --user ReiserFlorian)`.
+**Nicht mit dem Bot-Konto:** Repositories anlegen, Branch-Schutzregeln, Collaborators,
+Label und Issue-Typen einrichten. Das Bot-Konto hat dafür bewusst keine Rechte (`write`,
+kein `admin`). Solche Arbeiten laufen über das Admin-Konto und werden vorher angesprochen —
+`GH_TOKEN=$(gh auth token --user <Admin-Konto>)`.
 
 `gh auth switch` ist hier das falsche Werkzeug: Es setzt einen globalen Zustand, den eine
 andere Sitzung verändert haben kann. Ein unbeaufsichtigter Lauf darf nicht davon abhängen.
