@@ -1,9 +1,29 @@
 # reiser-skills
 
-Die Arbeitsweise für alle Softwareprojekte, als Claude-Plugin. Eine Quelle, von allen
+Die Arbeitsweise für alle Softwareprojekte, als Claude-Marketplace. Eine Quelle, von allen
 Projekten referenziert — damit dieselbe Regel nicht in fünf Repositories getrennt altert.
 
-## Was drin ist
+## Zwei Plugins, eine Grenze
+
+| Plugin | geladen in | Inhalt |
+|---|---|---|
+| `reiser-workflow` | überall — lokal **und** in unbeaufsichtigten GitHub-Läufen | die Arbeitsweise selbst |
+| `reiser-lokal` | **nur** lokal | was nur am eigenen Rechner gilt |
+
+Die Grenze ist keine Bitte an das Modell, sondern eine Zeile im Workflow: er listet unter
+`plugins:` ausschließlich `reiser-workflow@reiser-skills`, also erreicht `reiser-lokal`
+eine unbeaufsichtigte Sitzung gar nicht. Eine Regel, die nur lokal gelten soll, im selben
+Plugin abzulegen und mit „gilt nur lokal" zu überschreiben, wäre das Gegenteil davon: Sie
+hinge daran, dass das Modell den Hinweis liest und befolgt.
+
+Was gehört wohin? Eine Frage entscheidet: **Dürfte ein unbeaufsichtigter Lauf das lesen
+und danach handeln?** Ja → `reiser-workflow`. Nein → `reiser-lokal`.
+
+Beispiele für das zweite: die Zuordnung der angemeldeten GitHub-Konten (in einem Lauf gibt
+es sie nicht — er hat nur sein eigenes Token) und die Befehle, mit denen der Nutzer im Chat
+ein Release auslöst (ein Lauf darf gar keines bauen).
+
+### `reiser-workflow`
 
 | Skill | wofür |
 |---|---|
@@ -15,9 +35,15 @@ Projekten referenziert — damit dieselbe Regel nicht in fünf Repositories getr
 | `erklaeren-mit-mass` | wie viel Erklärung ein Text verdient |
 | `repo-hygiene` | was in ein Repository gehört und was nicht |
 
+### `reiser-lokal`
+
+| Skill | wofür |
+|---|---|
+| `f-reiser-strukturarbeit` | Strukturaufgaben über den Chat statt über Issues; welches GitHub-Konto wofür; Release-Befehle |
+
 ## Verwendung
 
-**In einem Projekt-Workflow:**
+**In einem Projekt-Workflow** — nur `reiser-workflow`:
 
 ```yaml
 - uses: anthropics/claude-code-action@v1
@@ -28,11 +54,12 @@ Projekten referenziert — damit dieselbe Regel nicht in fünf Repositories getr
     prompt: "/github-issue-workflow"
 ```
 
-**Lokal in Claude Code:**
+**Lokal in Claude Code** — beide:
 
 ```bash
 claude plugin marketplace add f-reiser/claude-skills
 claude plugin install reiser-workflow@reiser-skills
+claude plugin install reiser-lokal@reiser-skills
 ```
 
 Beides liest **dasselbe Repository**. Deshalb gibt es diese Skills nicht zusätzlich als
@@ -47,14 +74,25 @@ dort gebraucht werden, bleiben Konto-Skills — sie haben mit Softwareprojekten
 ## Versionierung
 
 Semantic Versioning und Releases: `semver-und-releases`. Tag-Schema hier:
-`reiser-workflow--v<version>`.
+`<plugin>--v<version>`, also `reiser-workflow--v1.1.1` und `reiser-lokal--v1.1.1`.
 
-Beim Release sind **zwei** Stellen zu ziehen, beide vom Plugin-Format erzwungen:
+**Beide Plugins tragen dieselbe Nummer und werden zusammen veröffentlicht.** Sie sind zwei
+Hälften einer Arbeitsweise, nicht zwei Produkte: `reiser-lokal` verweist auf Abschnitte in
+`reiser-workflow` und setzt dessen Stand voraus. Getrennte Zählung hieße, dass „Version
+1.4" je nach Plugin etwas anderes bedeutet — und dass niemand sagen kann, welche
+Kombination erprobt ist.
 
-1. `.claude-plugin/marketplace.json`
-2. `plugins/reiser-workflow/.claude-plugin/plugin.json`
+Beim Release sind dadurch **vier** Stellen zu ziehen, alle vom Plugin-Format erzwungen:
 
-`claude plugin tag` prüft sie gegeneinander und verweigert das Release, wenn sie
-auseinanderliegen. Dieses Repository enthält bewusst **keinen ausführbaren Code**, den ein
-Projekt-Workflow über einen Tag holen müsste — es gibt also keine dritte Stelle, die beim
-Hochzählen vergessen werden kann.
+1. `.claude-plugin/marketplace.json` → Eintrag `reiser-workflow`
+2. `.claude-plugin/marketplace.json` → Eintrag `reiser-lokal`
+3. `plugins/reiser-workflow/.claude-plugin/plugin.json`
+4. `plugins/reiser-lokal/.claude-plugin/plugin.json`
+
+`claude plugin tag <pfad>` prüft je Plugin die eigene `plugin.json` gegen den
+Marketplace-Eintrag und verweigert das Release, wenn sie auseinanderliegen — den Gleichlauf
+*zwischen* den Plugins prüft es nicht, das ist Sache des Release-Ablaufs.
+
+Dieses Repository enthält bewusst **keinen ausführbaren Code**, den ein Projekt-Workflow
+über einen Tag holen müsste — es gibt also keine fünfte Stelle, die beim Hochzählen
+vergessen werden kann.
