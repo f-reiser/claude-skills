@@ -229,6 +229,13 @@ das falsch aussieht, ohne dass es auffällt.
 | `git push` | wer pushen darf | Credential-Helper (folgt `GH_TOKEN`) |
 | Commit-Autor | was die Historie sagt | `user.name` / `user.email` |
 
+**Gilt nur, wenn die Sitzung diese Konten überhaupt anmelden kann** — geprüft mit
+`gh auth status`. Das ist bei einer lokalen Sitzung der Fall, nicht bei einer Sitzung, die
+ausschließlich innerhalb eines GitHub-Workflows läuft (claude-api/GitHub Actions): die
+handelt immer unter ihrem eigenen, vom Workflow bereitgestellten Token, hat keinen Zugriff
+auf eines der unten gemeinten Konten und sollte diesen ganzen Abschnitt überspringen statt
+einen Kontowechsel zu versuchen, der ins Leere läuft.
+
 **Welche Konten das konkret sind, steht nicht hier.** Kontonamen sind personenbezogen;
 dieses Repository ist öffentlich. Die tatsächliche Zuordnung — welches Konto Bot, welches
 Admin, für welche Organisation — gehört in einen lokalen Skill außerhalb dieses
