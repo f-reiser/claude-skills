@@ -35,6 +35,29 @@ Die Schreibweise ist bindend, `gh label list` zeigt die gültige Fassung.
 Weitere Label können hinzukommen. Ein unbekanntes Label ist kein Grund, ein Issue zu
 überspringen — aber ein Grund nachzufragen, wenn es die Behandlung ändern könnte.
 
+### Steuerlabel: Modell, Version, Aufwand
+
+Sie sagen nichts über den Vorgang, sondern über den **Lauf**, der ihn abarbeitet — was
+er kosten darf. Alle drei Gruppen: **nur Nutzer**, entfernen dürfen beide.
+
+| Gruppe | Label |
+|---|---|
+| Modell | `Opus` · `Sonnet` |
+| Version | `4` · `5` |
+| Aufwand | `niedrig` · `mittel` · `hoch` · `extra hoch` · `maximal` |
+
+**Über die Gruppen hinweg kombinierbar, innerhalb einer Gruppe nicht.** `Opus` + `4` +
+`niedrig` ist eine gültige Vorgabe; `Opus` + `Sonnet` ist ein Widerspruch.
+
+Ohne Label läuft der Durchgang mit einem günstigen Standard. Ohne Versionslabel gilt die
+neueste Fassung des gewählten Modells, ohne Aufwandslabel `hoch`.
+
+**Du wertest diese Label nicht aus.** Wenn du liest, ist die Wahl längst getroffen — sie
+muss feststehen, bevor du startest, denn ein laufender Lauf kann sein Modell nicht mehr
+wechseln. Der Workflow tut das (im Stoffverteilungsplan `.github/modellwahl.py`). Diese
+Tabelle steht hier, damit du weißt, was der Nutzer damit steuert und was du ihm sagen
+kannst, wenn er fragt — nicht als Handlungsanweisung.
+
 ### Duplicate richtig gesetzt
 
 Ist `Duplicate` gesetzt, **muss** das abdeckende Issue in den Relationships stehen — dort
