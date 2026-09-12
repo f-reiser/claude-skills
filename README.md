@@ -44,6 +44,17 @@ Was der Marketplace nicht abdeckt: claude.ai im Browser und auf dem Handy. Skill
 dort gebraucht werden, bleiben Konto-Skills — sie haben mit Softwareprojekten
 üblicherweise nichts zu tun.
 
+## Was hier noch hinkommt
+
+Die Workflows, mit denen ein Projekt diese Skills überhaupt anwendet, liegen heute in
+jedem Projekt einzeln — obwohl in rund 300 Zeilen Auftragsworkflow genau **zwei** Zeilen
+projektspezifisch sind. Damit gilt für sie dasselbe Argument wie für die Skills selbst:
+eine Quelle, sonst altert dieselbe Regel getrennt.
+
+Der Befund, die Empfehlung und die offenen Fragen stehen in
+[`Doku/Entscheidung_Workflows_hierher.md`](Doku/Entscheidung_Workflows_hierher.md).
+**Vorschlag, nicht umgesetzt.**
+
 ## Versionierung
 
 Semantic Versioning und Releases: `semver-und-releases`. Tag-Schema hier:
