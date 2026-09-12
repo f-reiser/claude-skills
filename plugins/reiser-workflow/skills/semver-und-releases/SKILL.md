@@ -96,6 +96,22 @@ zeigt es, und ein Workflow, der einen Tag als `ref:` festnagelt, zeigt es auch.
 mit Autor, Datum und Meldung und lässt sich signieren; ein leichtgewichtiger Tag ist nur
 ein Zeiger und sagt später nichts darüber, wer wann was veröffentlicht hat.
 
+**Bei einem Claude-Plugin tritt `claude plugin tag` an die Stelle von `git tag -a`** (es
+prüft zusätzlich den Gleichlauf zwischen `plugin.json` und der Marketplace-Datei, siehe
+oben). Der Befehl nimmt aber keine Identität als Parameter entgegen wie `git commit
+-c user.name=…` — er tagt unter der aktuellen globalen Git-Identität. Für ein Release
+unter dem Bot-Konto (`git-branch-strategie` → „Mit welchem Konto") deshalb kurz davor
+repo-lokal umstellen und danach wieder entfernen, damit sonstige Arbeit in diesem Klon
+nicht stillschweigend unter dem Bot läuft:
+
+```bash
+git config --local user.name "<Bot-Konto>"
+git config --local user.email "<GitHub-User-ID>+<Bot-Konto>@users.noreply.github.com"
+claude plugin tag --message "Release %s" --push
+git config --local --unset user.name
+git config --local --unset user.email
+```
+
 **Ein veröffentlichter Tag wird nie verschoben oder gelöscht.** Wer ihn schon gezogen hat,
 bekommt sonst stillschweigend etwas anderes als alle anderen. Ist ein Release falsch, folgt
 ein neues mit höherer Nummer.
