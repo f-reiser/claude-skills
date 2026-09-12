@@ -1,0 +1,31 @@
+name: Pruefung
+
+# Bis jetzt hatte dieses Repository keine Pruefung - es enthielt nur Prosa, und die
+# einzige Zusage, die ein Werkzeug halten konnte, hielt "claude plugin tag" beim Release.
+# Mit dem zweiten Plugin gilt das nicht mehr: Der Gleichlauf der Versionen ZWISCHEN den
+# Plugins ist eine Zusage, die "claude plugin tag" strukturell nicht pruefen kann, weil
+# es je Aufruf nur ein Plugin sieht.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pruefung:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Marketplace und Plugins
+        run: python .github/pruefe_marketplace.py
+
+      #  Eine Pruefung ohne Mutation zaehlt nicht: Der Selbsttest weist nach, dass jeder
+      #  Befund oben wirklich anschlaegt, statt nur gruen zu leuchten.
+      - name: Selbsttest der Pruefung
+        run: python .github/pruefe_marketplace.py --selbsttest

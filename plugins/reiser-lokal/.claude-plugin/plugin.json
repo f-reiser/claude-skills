@@ -1,0 +1,8 @@
+{
+  "name": "reiser-lokal",
+  "description": "Ergaenzung zu reiser-workflow fuer Sitzungen am eigenen Rechner: Strukturarbeit ueber den Chat statt ueber Issues, Konten- und Repository-Ermittlung, Release-Befehle. Wird von unbeaufsichtigten GitHub-Laeufen bewusst nicht geladen.",
+  "version": "1.1.1",
+  "author": {
+    "name": "f-reiser"
+  }
+}
