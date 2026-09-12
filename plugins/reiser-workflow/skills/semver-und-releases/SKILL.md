@@ -83,6 +83,20 @@ git push origin <tag>
 gh release create <tag> --title "<version>" --notes-file <datei> <asset> ...
 ```
 
+**Zwischen Schritt 2 und Schritt 3 darf auf `main` nichts anderes landen.** Der Tag legt
+fest, was veröffentlicht wird. Ein Merge, der danach und vor `gh release create`
+passiert, steckt schon in `main`, aber nicht im Release — der sichtbare Stand von `main`
+und der tatsächlich veröffentlichte Stand laufen auseinander, ohne dass das irgendwo
+auffällt, bis jemand sich später darauf verlässt. Deshalb beide Schritte unmittelbar
+hintereinander, ohne Lücke für etwas anderes dazwischen.
+
+Passiert es trotzdem — ein Merge landet zwischen Tag und Release auf `main` —, wird der
+Tag **nicht** verschoben, um ihn nachträglich einzuschließen. Was zum Zeitpunkt des
+Taggens für dieses Release vorgesehen war, bleibt dessen Inhalt, auch wenn `main`
+inzwischen weiter ist. Der neue Commit gehört zum nächsten Release: eigene
+Versionsnummer, eigener Tag, eigenes `gh release create` — nicht rückwirkend in dieses
+hineingezogen.
+
 **Wie `<tag>` heißt.** Im Normalfall `v<version>`, also `v1.4.0`. Enthält ein Repository
 **mehrere getrennt veröffentlichte Einheiten** — etwa mehrere Plugins in einem
 Marketplace —, trägt der Tag den Namen der Einheit voran: `<name>--v<version>`, also
