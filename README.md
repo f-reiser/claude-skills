@@ -1,4 +1,24 @@
-# reiser-skills
+# reiser-skills — stillgelegt
+
+> **Dieses Repository wird nicht mehr weiterentwickelt.**
+> Die Arbeit ist nach **[f-reiser/reiser-flow](https://github.com/f-reiser/reiser-flow)**
+> umgezogen — mit vollständiger Historie, allen Tags und allen offenen Pull Requests.
+>
+> Der Name passte nicht mehr: Hier lagen nur Skills, im neuen Repository liegen auch die
+> GitHub-Workflows, die alle Projekte gemeinsam nutzen. Zugleich wurden die Plugins
+> umbenannt — `reiser-workflow` heißt jetzt `reiser-flow`, `reiser-lokal` heißt
+> `reiser-flow-lokal`.
+>
+> ```bash
+> claude plugin marketplace add f-reiser/reiser-flow
+> claude plugin install reiser-flow@reiser-flow
+> claude plugin install reiser-flow-lokal@reiser-flow
+> ```
+>
+> Was unter dieser Adresse schon eingebunden ist, funktioniert weiter: Das Repository
+> bleibt lesbar, und die bestehenden Tags stehen unverändert auch im neuen Repository.
+> Der Text unten beschreibt den letzten Stand hier und wird nicht mehr gepflegt.
+
 
 Die Arbeitsweise für alle Softwareprojekte, als Claude-Marketplace. Eine Quelle, von allen
 Projekten referenziert — damit dieselbe Regel nicht in fünf Repositories getrennt altert.
