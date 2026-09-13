@@ -126,32 +126,31 @@ Repository dazukommt" unten.
 
 ### Ein Release auslösen
 
-Alle Formen sind gleichwertig — „Erstelle X", „X erstellen", teils „X releasen".
+**Alle vier Formen lösen ein Release aus** — sie unterscheiden sich nur darin, welche
+Versionsnummer dabei verwendet wird. Innerhalb einer Form sind „Erstelle X" und „X
+erstellen" gleichwertig, teils auch „X releasen".
 
-| Befehl | was passiert |
+| Befehl | Versionsnummer |
 |---|---|
-| **Erstelle Release** | Release mit der Nummer, die **aktuell in den Dateien steht**. Nicht hochzählen. |
-| **Erstelle Minor Release** | MINOR + 1, PATCH auf 0, dann Release. |
-| **Erstelle Fix Release** · **Fix releasen** | PATCH + 1, MINOR unverändert, dann Release. |
-| **Erstelle Release 1.2.3** · **1.2.3 releasen** | genau diese Nummer, ohne Ableitung. |
+| **Erstelle Release** · **Release erstellen** | die Nummer, die **aktuell in den Dateien steht** — nicht hochgezählt. |
+| **Erstelle Minor Release** · **Minor Release erstellen** | MINOR + 1, PATCH auf 0. |
+| **Erstelle Fix Release** · **Fix Release erstellen** · **Fix releasen** | PATCH + 1, MINOR unverändert. |
+| **Erstelle Release 1.2.3** · **Release 1.2.3 erstellen** · **1.2.3 releasen** | genau diese Nummer, ohne Ableitung. |
 
 Ohne Nummer im Befehl gilt die Ableitung aus `semver-und-releases` → „Welche Stelle
 steigt". Trägt sie nicht, wird nichts getan und gefragt — auch das steht dort.
 
 ### Nur vorbereiten, noch nicht veröffentlichen
 
-Diese Befehle ändern **nur die Dateien**. Kein Tag, kein Release.
-
-| Befehl | was passiert |
-|---|---|
-| **Nächstes Release 1.2.3** | Versionsnummer auf 1.2.3 setzen. |
+**Nächstes Release 1.2.3** setzt nur die Versionsnummer auf 1.2.3 — kein Tag, kein
+Release.
 
 ### Die Auflistung auf Verlangen
 
-Fragt der Nutzer **„Wie kann ich releasen?"**, gib die beiden Tabellen oben wieder — jeden
-Befehl mit dem, was du dabei tun würdest, und dazu die drei Punkte: dass ohne Nummer
-abgeleitet wird, dass MAJOR immer bei ihm liegt, und welche Nummer aktuell in den Dateien
-steht. Kein Release, keine Änderung — nur die Antwort.
+Fragt der Nutzer **„Wie kann ich releasen?"**, gib die Tabelle oben und den Befehl zum
+Vorbereiten wieder — jeden mit dem, was du dabei tun würdest, und dazu die drei Punkte:
+dass ohne Nummer abgeleitet wird, dass MAJOR immer bei ihm liegt, und welche Nummer
+aktuell in den Dateien steht. Kein Release, keine Änderung — nur die Antwort.
 
 ### Die eine Ausnahme von „gemergt wird nur vom Nutzer"
 
