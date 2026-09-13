@@ -4,10 +4,11 @@ description: >
   Prüft jede Erklärung darauf, ob sie ihren Platz verdient — in Code-Kommentaren,
   Commit-Meldungen, Pull-Request-Texten, Issue-Kommentaren, README- und Doku-Dateien.
   Grundsatz: WARUM statt WAS, und so wenig wie möglich, weil jede Zeile Dokumentation
-  gelesen und gepflegt werden muss. Nutze diesen Skill, bevor du einen Kommentar, eine
-  Commit-Meldung, einen PR-Text, ein Issue oder einen Doku-Abschnitt schreibst oder
-  überarbeitest, und wenn zu entscheiden ist, ob etwas überhaupt dokumentiert gehört.
-  Ebenso, wenn Text gekürzt, aufgeräumt oder von Füllmaterial befreit werden soll.
+  gelesen und gepflegt werden muss — von Nutzern, die dafür oft keine Zeit haben. Lade
+  diesen Skill AKTIV vor jedem Kommentar, jeder Commit-Meldung, jedem PR-Text, Issue
+  oder Doku-Abschnitt, auch ungefragt — nicht erst, wenn er zufällig schon geladen ist
+  oder jemand nachfragt. Ebenso, wenn zu entscheiden ist, ob etwas überhaupt
+  dokumentiert gehört, und wenn Text gekürzt oder von Füllmaterial befreit werden soll.
 ---
 
 # Erklären mit Maß
@@ -41,6 +42,8 @@ zweite Fassung — und die zweite Fassung ist die, die veraltet.
 - Er begründet, was niemand in Frage gestellt hat
 - Er wiederholt in Prosa, was die darunterstehende Tabelle, Signatur oder Liste zeigt
 - Er erzählt den Weg statt das Ergebnis („zuerst habe ich …, dann …")
+- Dieselbe Begründung steht an mehreren Stellen zugleich (Code-Kommentar UND
+  Commit-Meldung UND PR-Text) statt an der einen, die laut Tabelle unten zuständig ist
 
 **Beispiel.** Statt
 
