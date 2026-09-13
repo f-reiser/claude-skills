@@ -119,15 +119,10 @@ Der Ablauf eines Releases steht in `reiser-workflow:semver-und-releases` — **w
 des Nutzers eines auslösen, steht nur hier.** Ein unbeaufsichtigter Lauf baut keine
 Releases; eine Befehlsliste hätte dort nichts zu suchen und wäre eine Angriffsfläche mehr.
 
-### Zwei Begriffe
-
-**Versionsnummer** — `MAJOR.MINOR.PATCH`. Wo sie im Projekt steht: `semver-und-releases` →
-„Wo die Version steht".
-
-**Release-Name** — der Namensteil vor der Nummer, im Tag `<name>--v<version>`. Er ist
-**optional**: ist keiner gesetzt, heißt der Tag schlicht `v<version>` und das Release trägt
-nur die Nummer. Welcher gerade gilt, verrät `git tag --list` und die Datei, die ihn führt
-(in `claude-skills` sind das die Plugin-Namen in `plugin.json` und `marketplace.json`).
+Ein Release hat nur eine Versionsnummer — `MAJOR.MINOR.PATCH`. Wo sie im Projekt steht:
+`semver-und-releases` → „Wo die Version steht". Es gibt daneben **keinen** eigenen
+„Release-Namen": Was danach aussieht, ist der Plugin-Name, siehe „Was in diesem
+Repository dazukommt" unten.
 
 ### Ein Release auslösen
 
@@ -139,11 +134,6 @@ Alle Formen sind gleichwertig — „Erstelle X", „X erstellen", teils „X re
 | **Erstelle Minor Release** | MINOR + 1, PATCH auf 0, dann Release. |
 | **Erstelle Fix Release** · **Fix releasen** | PATCH + 1, MINOR unverändert, dann Release. |
 | **Erstelle Release 1.2.3** · **1.2.3 releasen** | genau diese Nummer, ohne Ableitung. |
-| **Erstelle Release reiser-workflow 1.2.3** | benanntes Release: Name **und** Nummer. |
-
-Beim benannten Release **zuerst prüfen, ob sich der Name gegenüber dem vorigen Release
-geändert hat** (`git tag --list`). Hat er sich geändert, wird er vor dem Release in *allen*
-Dateien nachgezogen, die ihn führen — nicht nur dort, wo er zufällig auffällt.
 
 Ohne Nummer im Befehl gilt die Ableitung aus `semver-und-releases` → „Welche Stelle
 steigt". Trägt sie nicht, wird nichts getan und gefragt — auch das steht dort.
@@ -155,22 +145,19 @@ Diese Befehle ändern **nur die Dateien**. Kein Tag, kein Release.
 | Befehl | was passiert |
 |---|---|
 | **Nächstes Release 1.2.3** | Versionsnummer auf 1.2.3 setzen. |
-| **Nächstes Release reiser-workflow** | Release-Namen auf `reiser-workflow` setzen. |
-| **Nächstes Release reiser-workflow 1.2.3** | beides. |
 
 ### Die Auflistung auf Verlangen
 
 Fragt der Nutzer **„Wie kann ich releasen?"**, gib die beiden Tabellen oben wieder — jeden
 Befehl mit dem, was du dabei tun würdest, und dazu die drei Punkte: dass ohne Nummer
-abgeleitet wird, dass MAJOR immer bei ihm liegt, und was aktuell in den Dateien steht
-(Name und Nummer). Kein Release, keine Änderung — nur die Antwort.
+abgeleitet wird, dass MAJOR immer bei ihm liegt, und welche Nummer aktuell in den Dateien
+steht. Kein Release, keine Änderung — nur die Antwort.
 
 ### Die eine Ausnahme von „gemergt wird nur vom Nutzer"
 
-Ein Pull Request, der **ausschließlich** Versionsnummern und/oder den Release-Namen ändert,
-darf **selbst gemergt** werden. Diese Erlaubnis gilt für genau diese Art Pull Request und
-für keine andere — sie ist keine Lockerung von `git-branch-strategie`, sondern eine eng
-umrissene Ausnahme davon.
+Ein Pull Request, der **ausschließlich** Versionsnummern ändert, darf **selbst gemergt**
+werden. Diese Erlaubnis gilt für genau diese Art Pull Request und für keine andere — sie
+ist keine Lockerung von `git-branch-strategie`, sondern eine eng umrissene Ausnahme davon.
 
 Die Grenze ist wörtlich zu nehmen. Vor dem Merge nachsehen, nicht annehmen:
 
@@ -178,11 +165,11 @@ Die Grenze ist wörtlich zu nehmen. Vor dem Merge nachsehen, nicht annehmen:
 gh pr diff <nr>
 ```
 
-Steht darin **irgendetwas** außer geänderten Versionsnummern und Namen — eine
-Doku-Anpassung, ein Verweis, ein nachgezogener Kommentar, eine Zeile in der Prüfung —, ist
-die Ausnahme verbraucht und es gilt wieder: **der Nutzer mergt.** Im Zweifel nicht mergen;
-ein wartender Pull Request kostet nichts, ein selbst gemergter zu viel Inhalt lässt sich
-nicht zurücknehmen.
+Steht darin **irgendetwas** außer geänderten Versionsnummern — eine Doku-Anpassung, ein
+Verweis, ein nachgezogener Kommentar, eine Zeile in der Prüfung —, ist die Ausnahme
+verbraucht und es gilt wieder: **der Nutzer mergt.** Im Zweifel nicht mergen; ein
+wartender Pull Request kostet nichts, ein selbst gemergter zu viel Inhalt lässt sich nicht
+zurücknehmen.
 
 **Kam der Befehl aus der Spalte „Ein Release auslösen"**, folgt nach diesem Merge
 unmittelbar das Release nach `semver-und-releases`. Kam er aus „Nur vorbereiten", endet es
@@ -192,6 +179,7 @@ hier.
 
 `claude-skills` veröffentlicht **zwei** Plugins unter derselben Nummer (`README.md` →
 „Versionierung"). Ein Release heißt hier deshalb: vier Stellen ziehen, zwei Tags setzen,
-**ein** GitHub-Release. Und „Release-Name" ist hier nicht eindeutig — es gibt zwei
-Plugin-Namen. Nennt ein Befehl einen Namen, der nach einer Umbenennung aussieht, ist das
-eine Rückfrage wert statt eines Ratens.
+**ein** GitHub-Release. Die Tags heißen `reiser-workflow--v<version>` und
+`reiser-lokal--v<version>` — der Teil vor `--v` ist der Plugin-Name, kein separat
+wählbarer Release-Name. Nennt ein Befehl einen Namen, der nach einer Umbenennung eines
+Plugins aussieht, ist das eine Rückfrage wert statt eines Ratens.
