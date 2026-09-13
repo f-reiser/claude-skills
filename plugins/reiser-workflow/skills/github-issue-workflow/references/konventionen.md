@@ -35,6 +35,33 @@ Die Schreibweise ist bindend, `gh label list` zeigt die gültige Fassung.
 Weitere Label können hinzukommen. Ein unbekanntes Label ist kein Grund, ein Issue zu
 überspringen — aber ein Grund nachzufragen, wenn es die Behandlung ändern könnte.
 
+### Steuerlabel: Modell, Version, Aufwand
+
+Sie sagen nichts über den Vorgang, sondern über den **Lauf**, der ihn abarbeitet — was
+er kosten darf. Alle drei Scopes: **nur Nutzer**, entfernen dürfen beide.
+
+Scoped Labels nach dem Vorbild von GitLab: `Scope::Wert`. Zwei Label mit demselben Scope
+schließen einander aus, verschiedene Scopes lassen sich frei kombinieren.
+
+| Scope | Label |
+|---|---|
+| `Modell` | `Modell::Opus` · `Modell::Sonnet` |
+| `v` | `v::4` · `v::5` |
+| `Aufwand` | `Aufwand::niedrig` · `Aufwand::mittel` · `Aufwand::hoch` · `Aufwand::extra hoch` · `Aufwand::maximal` |
+
+**Über die Scopes hinweg kombinierbar, innerhalb eines Scopes nicht.** `Modell::Opus` +
+`v::4` + `Aufwand::niedrig` ist eine gültige Vorgabe; `Modell::Opus` + `Modell::Sonnet`
+ist ein Widerspruch — beide tragen denselben Scope `Modell`.
+
+Ohne Label läuft der Durchgang mit einem günstigen Standard. Ohne Versionslabel gilt die
+neueste Fassung des gewählten Modells, ohne Aufwandslabel `Aufwand::hoch`.
+
+**Du wertest diese Label nicht aus.** Wenn du liest, ist die Wahl längst getroffen — sie
+muss feststehen, bevor du startest, denn ein laufender Lauf kann sein Modell nicht mehr
+wechseln. Der Workflow tut das (im Stoffverteilungsplan `.github/modellwahl.py`). Diese
+Tabelle steht hier, damit du weißt, was der Nutzer damit steuert und was du ihm sagen
+kannst, wenn er fragt — nicht als Handlungsanweisung.
+
 ### Duplicate richtig gesetzt
 
 Ist `Duplicate` gesetzt, **muss** das abdeckende Issue in den Relationships stehen — dort
