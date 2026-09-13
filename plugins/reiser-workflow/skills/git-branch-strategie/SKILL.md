@@ -9,7 +9,10 @@ description: >
   anlegst, committest, pushst, einen Pull Request erstellst oder mergst; wenn zu klären ist,
   wie ein Pull Request nach main kommt; wenn ein Branch länger offen ist; bei jedem Merge-Konflikt; und immer, wenn
   zwei Änderungen voneinander abhängen. Ebenso bei Fragen nach Branch-Namen,
-  Merge-Reihenfolge, Commit-Identität oder dem zu verwendenden GitHub-Konto.
+  Merge-Reihenfolge, Commit-Identität oder dem zu verwendenden GitHub-Konto. Und beim
+  Kurzbefehl "Resolve #<nr>" / "Resolve PR#<nr>" / "Resolve <branchname>", der einen
+  wartenden Pull Request in einer Abhängigkeitskette per Rebase konfliktfrei vor main
+  bringt.
 ---
 
 # Branch-Strategie
@@ -83,6 +86,39 @@ mit beiden Fassungen und deiner Empfehlung.
 Das wirkt auch nach vorn: Bevorzuge Vorgehensweisen, die Konflikte gar nicht erst
 entstehen lassen — häufig rebasen, Änderungen klein und thematisch geschnitten halten,
 nicht nebenbei formatieren.
+
+## Kurzbefehl: `Resolve #<nr>`
+
+Erkannt werden `Resolve #<nr>`, `Resolve PR#<nr>` und `Resolve <branchname>` — die genaue
+Schreibweise ist nicht entscheidend, gemeint ist immer derselbe Auftrag. Er kommt vor,
+wenn mehrere Pull Requests in einer Abhängigkeitskette stehen (siehe „Blockierte Issues"
+unten) und einer davon jetzt an der Reihe ist, weil sein Vorgänger gerade nach `main`
+gemerged wurde. Der Nutzer will diesen Rebase nicht selbst fahren — dafür ist der
+Kurzbefehl da.
+
+Er ruft dafür nur die Regeln dieses Dokuments in der richtigen Reihenfolge ab, er ersetzt
+sie nicht:
+
+1. PR und Branch ermitteln — bei einer Nummer per `gh pr view <nr>`
+   (`headRefName`, `baseRefName`), bei einem Branchnamen per `gh pr list --head <branch>`.
+2. Den neuen Quellbranch bestimmen: `main`, außer der PR hängt laut „Blockierte Issues"
+   weiterhin von einem anderen offenen PR ab. Zeigte `baseRefName` auf einen Branch, der
+   inzwischen gemerged und gelöscht ist, den PR per `gh pr edit <nr> --base main`
+   umbiegen, bevor gerebased wird.
+3. Rebasen wie unter „Aktualisieren: immer Rebase, nie Merge".
+4. Konflikte lösen wie unter „Merge-Konflikte löst du" oben — hier der Regelfall, nicht
+   die Ausnahme.
+5. Die Testsuite des Projekts laufen lassen, bevor gepusht wird.
+6. `git push --force-with-lease`, unter dem Konto aus „Mit welchem Konto", das gerade für
+   laufende Arbeit zuständig ist.
+7. Zurückmelden — knapp. Keine Erklärung, was den Konflikt ausgelöst hat oder wie er
+   inhaltlich gelöst wurde; das weiß der Nutzer selbst, er hat den Kurzbefehl genau
+   deshalb gegeben. Nur das Ergebnis zählt: der PR ist jetzt bereit für `main` — oder,
+   falls nicht, der eine Grund, der ihn aufhält.
+
+Hängen weitere PRs von diesem ab, gilt zusätzlich „Zieh die abhängigen Branches mit" aus
+dem Abschnitt „Historie aufräumen" — der Kurzbefehl endet nicht beim ersten PR, wenn die
+Kette länger ist.
 
 ## Wie Issues zusammenhängen — drei verschiedene Dinge
 
